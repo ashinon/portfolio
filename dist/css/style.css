@@ -45,9 +45,9 @@ a:active {
 }
 
 #wrapper {
+  width: 100%;
   height: auto;
   min-height: 100%;
-  width: 100%;
   padding: 10px;
   overflow: hidden;
   overflow-y: auto;
@@ -60,6 +60,9 @@ a:active {
 #globalNavi {
   height: 70px;
   width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
   background: -moz-linear-gradient(
     bottom,
     rgba(255, 255, 255, 0.9) 70%,
@@ -78,9 +81,6 @@ a:active {
     rgba(255, 255, 255, 0.6) 75%,
     rgba(255, 255, 255, 0) 80%
   );
-  position: fixed;
-  top: 0;
-  left: 0;
   z-index: 1000;
   opacity: 0;
   transform-origin: 50% 0%;
@@ -110,24 +110,24 @@ a:active {
 }
 
 #globalNavi ul {
-  height: 100%;
   width: 100%;
-  list-style: none;
+  height: 100%;
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
-  position: relative;
+  list-style: none;
 }
 
 #globalNavi ul::before {
-  content: '';
-  display: block;
-  height: 25px;
   width: 100%;
-  z-index: 2000;
+  height: 25px;
+  display: block;
   position: absolute;
   bottom: 0;
   left: 0;
+  z-index: 2000;
+  content: '';
   background-image: radial-gradient(
       circle at 15px 0,
       rgba(255, 255, 255, 0) 14px,
@@ -164,10 +164,6 @@ a:active {
   -webkit-transition: 3s;
 }
 
-canvas {
-  display: block;
-}
-
 /****************************************
    セクションDIV
 ****************************************/
@@ -176,33 +172,18 @@ canvas {
 #skills,
 #works {
   width: 100%;
-  padding: 10px;
-  font-family: arial;
-}
-
-#home {
-  height: 100vh;
-  margin: 0;
-  position: relative;
-}
-
-#about {
   height: auto;
-  padding: 10px 10px 30px 10px;
   margin: 0 auto 30px auto;
+  padding: 10px 10px 30px 10px;
+  font-family: arial;
   display: block;
 }
 
-#skills {
-  height: auto;
-  padding: 10px 10px 30px 10px;
-  margin: 0px auto 30px auto;
-  position: relative;
-}
-
 #introduction {
-  height: 100%;
   width: 100%;
+  height: auto;
+  min-height: 100vh;
+  max-height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -220,8 +201,8 @@ h1 {
 
 #about h2,
 #skills h2 {
-  height: 50px;
   width: 90%;
+  height: 50px;
   margin: 0px auto 50px auto;
   position: relative;
   letter-spacing: 10px;
@@ -235,10 +216,10 @@ h1 {
 #skills h2::after {
   width: 90%;
   height: 38px;
-  content: '';
   position: absolute;
   top: 18px;
   left: 5%;
+  content: '';
   background-image: radial-gradient(
     circle at 50% 50%,
     rgba(255, 255, 255, 0.4) 3px,
@@ -250,19 +231,19 @@ h1 {
 
 #skills .skills-box {
   width: 100%;
-  padding: 30px;
-  border-radius: 15px;
-  background-color: rgba(255, 255, 255, 0.7);
   margin: 0 auto 30px auto;
+  padding: 30px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  border-radius: 15px;
+  background-color: rgba(255, 255, 255, 0.7);
 }
 
 .skills-box h3 {
+  width: 100%;
   margin-bottom: 10px;
   display: block;
-  width: 100%;
   font-size: 1.4rem;
   background: -moz-linear-gradient(
     bottom,
@@ -289,9 +270,9 @@ h1 {
 }
 
 .skills-box dl {
+  width: 90%;
   margin: 10px 15px;
   text-align: left;
-  width: 90%;
   text-emphasis: left;
 }
 .skills-box dt {
@@ -336,11 +317,11 @@ h1 {
 }
 
 .slider i.fas {
-  color: rgba(25, 25, 25, 0.7);
-  font-size: 2.5em;
   position: absolute;
   top: 50%;
   bottom: 50%;
+  color: rgba(25, 25, 25, 0.7);
+  font-size: 2.5em;
 }
 
 .slider i.fa-arrow-circle-right {
@@ -358,14 +339,13 @@ h1 {
 }
 
 .thumbnail {
-  margin: 0 auto;
   width: 90%;
+  margin: 0 auto;
 }
 
 .thumbnail ul {
   margin: 0;
   padding: 0;
-  list-style: none;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -373,12 +353,12 @@ h1 {
   -webkit-box-direction: normal;
   -ms-flex-flow: row wrap;
   flex-flow: row wrap;
+  list-style: none;
 }
 
 .thumbnail ul li {
-  margin: 10px 0;
   width: 23.5%;
-  margin-right: 2%;
+  margin: 10px 2% 10px 0;
   cursor: pointer;
   -webkit-filter: grayscale(90%);
   filter: grayscale(90%);
