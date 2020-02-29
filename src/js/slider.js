@@ -1,9 +1,12 @@
+/**
+ * スライダークラス
+ */
 export default class Slider {
   /**
    * constructor
    * @param {number} ms
    * @param {object} sections
-   * @param {array} sectionIdx
+   * @param {object} sectionIdx
    */
   constructor(ms = 5000, sections, sectionIdx) {
     this.sections = sections;
