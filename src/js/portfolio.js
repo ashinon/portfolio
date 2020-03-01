@@ -13,7 +13,6 @@ export default class Portfolio {
     this.allSelector = document.querySelector('body');
     this.wrapper = this.allSelector.querySelector('#wrapper');
     this.sections = this.allSelector.querySelectorAll('div.section');
-    this.navList = this.allSelector.querySelectorAll('nav li');
     this.setTransitionSpeed();
     this.getBoundaries();
     this.setBG(0);
@@ -41,17 +40,15 @@ export default class Portfolio {
       const rect = elem.getBoundingClientRect();
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
       const elemsTop = rect.top + scrollTop;
-      let boundary;
-      if (i <= 0) {
-        // 最上部は0にする
-        boundary = 0;
-      } else {
-        // 上部navi領域+αの高さ
+      // 最上部は0にする
+      let boundary = 0;
+      if (i > 0) {
         let referenceHeight = 75 + 25 + 30;
-        if (rect.top + scrollTop < referenceHeight || this.touchDevice) {
-          // 最上部以外で差し引きがマイナスになる or タッチデバイスの場合は0にする
+        if (this.touchDevice) {
+          // タッチデバイス
           boundary = elemsTop;
         } else {
+          // PC：上部navi領域-余白の高さ
           boundary = elemsTop - referenceHeight;
         }
       }
