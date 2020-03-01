@@ -2,6 +2,7 @@ import Slider from './slider.js';
 
 export default class Portfolio {
   constructor() {
+    this.touchDevice = this.isTouchDevice();
     this.allSelector = document.querySelector('body');
     this.wrapper = this.allSelector.querySelector('#wrapper');
     this.sections = this.allSelector.querySelectorAll('div.section');
@@ -19,7 +20,7 @@ export default class Portfolio {
   }
 
   setTransitionSpeed() {
-    if ('ontouchmove' in window) {
+    if (this.touchDevice) {
       this.transitionSpeed = '800';
     } else {
       this.transitionSpeed = '1000';
@@ -43,9 +44,7 @@ export default class Portfolio {
    * 背景変更メソッドに渡すプロパティをセット、実行
    * @param {number} speed 変化速度
    * @param {number} y 現在のスクロール位置
-   * @param {boolean} touchDevice
    */
-  setBG(speed, y, touchDevice = false) {
     let scrollTop;
     if (this.scrollTopCurrent > 0) {
       scrollTop = this.scrollTopCurrent;
@@ -131,16 +130,16 @@ export default class Portfolio {
    * スクロールに応じて背景色を変える
    */
   setPropForChangeColor() {
-    if ('ontouchmove' in window) {
+    if (this.touchDevice) {
       // スマホ用
       let touchObject = {};
       this.wrapper.addEventListener('touchmove', event => {
         touchObject = event.changedTouches[0];
-        this.setBG(this.transitionSpeed, touchObject.pageY, true);
+        this.setBG(this.transitionSpeed, touchObject.pageY);
       });
       this.wrapper.addEventListener('touchend', event => {
         touchObject = event.changedTouches[0];
-        this.setBG(this.transitionSpeed, touchObject.pageY, true);
+        this.setBG(this.transitionSpeed, touchObject.pageY);
       });
     } else {
       // PC用
@@ -193,6 +192,17 @@ export default class Portfolio {
       window.localStorage.getItem(checkKey);
       return true;
     } catch (e) {
+      return false;
+    }
+  }
+
+  /**
+   * タッチデバイスかどうかを判定
+   */
+  isTouchDevice() {
+    if ('ontouchmove' in window) {
+      return true;
+    } else {
       return false;
     }
   }
