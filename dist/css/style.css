@@ -301,7 +301,7 @@ h1 {
   position: relative;
 }
 
-.slider img {
+.slider #slideview {
   width: 70%;
   vertical-align: bottom;
   backface-visibility: hidden;

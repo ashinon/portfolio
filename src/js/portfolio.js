@@ -6,11 +6,6 @@ export default class Portfolio {
     this.wrapper = this.allSelector.querySelector('#wrapper');
     this.sections = this.allSelector.querySelectorAll('div.section');
     this.navList = this.allSelector.querySelectorAll('nav li');
-    this.sectionIdx = {
-      home: 0,
-      about: 1,
-      skills: 2,
-    };
     this.anime;
     this.sectionTops;
     this.moveFlug = false;
@@ -20,7 +15,7 @@ export default class Portfolio {
     this.getElemsTop();
     this.setBG(this.transitionSpeed);
     this.addEvents();
-    new Slider(5000, this.sections, this.sectionIdx);
+    new Slider(this.allSelector.querySelector('#about'), 5000);
   }
 
   setTransitionSpeed() {
