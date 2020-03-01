@@ -1,24 +1,29 @@
 import Slider from './slider.js';
 
+/**
+ * ポートフォリオ画面の表示・イベントのクラス
+ */
 export default class Portfolio {
   constructor() {
+    this.anime;
+    this.boundaries;
+    this.transitionSpeed;
+    this.scrollTopCurrent = 0;
     this.touchDevice = this.isTouchDevice();
     this.allSelector = document.querySelector('body');
     this.wrapper = this.allSelector.querySelector('#wrapper');
     this.sections = this.allSelector.querySelectorAll('div.section');
     this.navList = this.allSelector.querySelectorAll('nav li');
-    this.anime;
-    this.sectionTops;
-    this.moveFlug = false;
-    this.transitionSpeed;
-    this.scrollTopCurrent;
     this.setTransitionSpeed();
-    this.getElemsTop();
-    this.setBG(this.transitionSpeed);
+    this.getBoundaries();
+    this.setBG(0);
     this.addEvents();
     new Slider(this.allSelector.querySelector('#about'), 5000);
   }
 
+  /**
+   * 背景色変化のアニメーションの速度をセットする
+   */
   setTransitionSpeed() {
     if (this.touchDevice) {
       this.transitionSpeed = '800';
@@ -28,15 +33,29 @@ export default class Portfolio {
   }
 
   /**
-   * 各要素のtopの位置を求める
+   * 各要素の背景色が変わる境界位置を求める
    */
-  getElemsTop() {
-    this.sectionTops = [];
-    this.sections.forEach(elem => {
+  getBoundaries() {
+    this.boundaries = [];
+    this.sections.forEach((elem, i) => {
       const rect = elem.getBoundingClientRect();
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
       const elemsTop = rect.top + scrollTop;
-      this.sectionTops.push(elemsTop);
+      let boundary;
+      if (i <= 0) {
+        // 最上部は0にする
+        boundary = 0;
+      } else {
+        // 上部navi領域+αの高さ
+        let referenceHeight = 75 + 25 + 30;
+        if (rect.top + scrollTop < referenceHeight || this.touchDevice) {
+          // 最上部以外で差し引きがマイナスになる or タッチデバイスの場合は0にする
+          boundary = elemsTop;
+        } else {
+          boundary = elemsTop - referenceHeight;
+        }
+      }
+      this.boundaries.push(boundary);
     });
   }
 
@@ -45,29 +64,35 @@ export default class Portfolio {
    * @param {number} speed 変化速度
    * @param {number} y 現在のスクロール位置
    */
-    let scrollTop;
-    if (this.scrollTopCurrent > 0) {
-      scrollTop = this.scrollTopCurrent;
-      // 再読み込み後の表示の場合
-      this.scrollTopCurrent = 0;
-    } else if (y !== undefined) {
-      scrollTop = y;
-    } else {
-      scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    }
-    let referenceHeight = 0;
-    if (touchDevice) {
-      referenceHeight = window.innerHeight * -0.2;
-    } else {
-      // 上部naviの領域プラス20pxくらいで色変更する
-      referenceHeight = 75 + 25 + 20;
-    }
-    for (let i = this.sectionTops.length - 1; i >= 0; i--) {
-      if (scrollTop > this.sectionTops[i] - referenceHeight) {
+  setBG(speed, y) {
+    const scrollTop = this.getScrollTop(y);
+    for (let i = this.boundaries.length - 1; i >= 0; i--) {
+      if (scrollTop >= this.boundaries[i]) {
         this.chengeBG(i, speed);
         break;
       }
     }
+  }
+
+  /**
+   * スクロール位置を取得する
+   * @param {number} param
+   * @return {number} scrollTop
+   */
+  getScrollTop(param) {
+    let scrollTop;
+    if (param !== undefined) {
+      // 呼び出し元でスクロール位置の指定がある場合
+      scrollTop = param;
+    } else if (this.scrollTopCurrent > 0) {
+      // 再読み込み後の場合
+      scrollTop = this.scrollTopCurrent;
+      this.scrollTopCurrent = 0;
+    } else {
+      // どちらでもない場合
+      scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    }
+    return scrollTop;
   }
 
   /**
@@ -80,7 +105,7 @@ export default class Portfolio {
     let current = -1;
     //カラー設定の配列
     let bgColor = ['rgba(255, 182, 193, 1)', 'rgba(173, 216, 230, 1)', 'rgba(173, 216, 230, .5)'];
-    if (secNum != current && this.moveFlug == false) {
+    if (secNum != current) {
       current = secNum;
       this.stopAnimation(this.anime);
       this.startAnimation(this.allSelector, { backgroundColor: bgColor[current] }, 200, speed);
@@ -122,14 +147,14 @@ export default class Portfolio {
    */
   addEvents() {
     this.addEventUnload();
-    this.setPropForChangeColor();
+    this.addEventChangeColor();
     this.addEventResize();
   }
 
   /**
    * スクロールに応じて背景色を変える
    */
-  setPropForChangeColor() {
+  addEventChangeColor() {
     if (this.touchDevice) {
       // スマホ用
       let touchObject = {};
@@ -155,11 +180,11 @@ export default class Portfolio {
 
   /**
    * resizeイベント時のメソッド
-   * スクロール位置を取得し、背景色を変更
+   * スクロール位置を再取得し、背景色を変更
    */
   addEventResize() {
     window.addEventListener('resize', () => {
-      this.getElemsTop();
+      this.getBoundaries();
       this.setBG(this.transitionSpeed);
     });
   }
