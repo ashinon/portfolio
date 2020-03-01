@@ -130,7 +130,6 @@ export default class Portfolio {
     this.addEventUnload();
     this.setPropForChangeColor();
     this.addEventResize();
-    this.clickNaviList();
   }
 
   /**
@@ -186,28 +185,6 @@ export default class Portfolio {
         window.pageYOffset = window.localStorage.getItem('sectionalPosition');
         this.scrollTopCurrent = window.pageYOffset || document.documentElement.scrollTop;
       }
-    });
-  }
-
-  /**
-   * グローバルナビクリック時の動き
-   */
-  clickNaviList() {
-    this.navList.forEach(navLi => {
-      navLi.addEventListener(
-        'click',
-        () => {
-          this.moveFlug = true;
-          const getNum = navLi.findeIndex();
-          const secTop = this.sections.eq(getNum).offset().top;
-          this.allSelector.animate({ scrollTop: secTop }, 'slow', () => {
-            this.moveFlug = false;
-            this.chengeBG(getNum);
-          });
-          return false;
-        },
-        false
-      );
     });
   }
 
