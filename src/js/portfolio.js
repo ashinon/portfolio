@@ -18,6 +18,27 @@ export default class Portfolio {
     this.setBG(0);
     this.addEvents();
     new Slider(this.allSelector.querySelector('#about'), 5000);
+    this.hideLoadingAnime();
+  }
+
+  /**
+   * トップの背景画像読み込み完了時に読み込み中アニメーションを非表示
+   */
+  hideLoadingAnime() {
+    const bgPhoto = document.getElementById('bg-photo');
+    const imgPass = 'dist/img/';
+    let url =
+      bgPhoto.style['background-image'] || window.getComputedStyle(bgPhoto, '')['background-image'];
+    url = url.replace(/^url.+?img\/([^/]+?)"\)/, '$1').replace(/(.+?)$/, imgPass + '$1');
+    const img = document.createElement('img');
+    img.src = url;
+    img.width = img.height = 1;
+    this.wrapper.appendChild(img);
+    img.onload = () => {
+      document.getElementById('preLoading').style.display = 'none';
+      this.wrapper.removeChild(img);
+    };
+  }
   }
 
   /**
