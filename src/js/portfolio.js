@@ -48,7 +48,7 @@ export default class Portfolio {
     if (this.touchDevice) {
       this.transitionSpeed = '800';
     } else {
-      this.transitionSpeed = '1000';
+      this.transitionSpeed = '1200';
     }
   }
 
@@ -64,7 +64,7 @@ export default class Portfolio {
       // 最上部は0にする
       let boundary = 0;
       if (i > 0) {
-        let referenceHeight = 75 + 25 + 30;
+        let referenceHeight = 40 + 20; // ナビゲーション+αの高さで背景色変更する
         if (this.touchDevice) {
           // タッチデバイス
           boundary = elemsTop;
@@ -83,7 +83,8 @@ export default class Portfolio {
    * @param {number} y 現在のスクロール位置
    */
   setBG(speed, y) {
-    const scrollTop = this.getScrollTop(y);
+    const scrollTop = this.scrollTopPrev || this.getScrollTop(y);
+    this.scrollTopPrev = 0;
     for (let i = this.boundaries.length - 1; i >= 0; i--) {
       if (scrollTop >= this.boundaries[i]) {
         this.chengeBG(i, speed);
@@ -122,7 +123,13 @@ export default class Portfolio {
     //現在の番号
     let current = -1;
     //カラー設定の配列
-    let bgColor = ['rgba(255, 182, 193, 1)', 'rgba(173, 216, 230, 1)', 'rgba(173, 216, 230, .5)'];
+    let bgColor = [
+      'rgba(176, 196, 222, 0.5)', // 水色
+      'rgba(236, 225, 145, 0.3)', // 黄色
+      'rgba(255, 182, 193, 0.3)', // ピンク
+      'rgba(187, 161, 212, 0.3)', // 紫
+      'rgba(145, 236, 186, 0.3)', // 緑
+    ];
     if (secNum != current) {
       current = secNum;
       this.stopAnimation(this.anime);
@@ -165,35 +172,23 @@ export default class Portfolio {
    */
   addEvents() {
     this.addEventUnload();
-    this.addEventChangeColor();
+    this.addEventScrolle();
     this.addEventResize();
   }
 
   /**
-   * スクロールに応じて背景色を変える
+   * スクロールに応じたイベントを付与する
    */
-  addEventChangeColor() {
-    if (this.touchDevice) {
-      // スマホ用
-      let touchObject = {};
-      this.wrapper.addEventListener('touchmove', event => {
-        touchObject = event.changedTouches[0];
-        this.setBG(this.transitionSpeed, touchObject.pageY);
-      });
-      this.wrapper.addEventListener('touchend', event => {
-        touchObject = event.changedTouches[0];
-        this.setBG(this.transitionSpeed, touchObject.pageY);
-      });
-    } else {
-      // PC用
-      window.addEventListener(
-        'scroll',
-        () => {
-          this.setBG(this.transitionSpeed);
-        },
-        { passive: true }
-      );
-    }
+  addEventScrolle() {
+    window.addEventListener(
+      'scroll',
+      () => {
+        this.setBG(this.transitionSpeed);
+        this.setFixedClass();
+        this.scrollTopLast = this.getScrollTop();
+      },
+      { passive: true }
+    );
   }
 
   /**
