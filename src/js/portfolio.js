@@ -14,6 +14,8 @@ export default class Portfolio {
     this.allSelector = document.querySelector('body');
     this.wrapper = this.allSelector.querySelector('#wrapper');
     this.sections = this.allSelector.querySelectorAll('div.section');
+    this.introduction = this.allSelector.querySelector('#introduction');
+    this.nav = this.allSelector.querySelector('#globalNavi');
     this.setTransitionSpeed();
     this.getBoundaries();
     this.setBG(0);
@@ -90,6 +92,33 @@ export default class Portfolio {
       if (scrollTop >= this.boundaries[i]) {
         this.chengeBG(i, speed);
         break;
+      }
+    }
+  }
+
+  /**
+   * ナビゲーションにfixedクラスを付与
+   * @param {number} y 現在のスクロール位置
+   */
+  setFixedClass(y) {
+    const scrollTop = this.getScrollTop(y);
+    const underNaviHeight = this.introduction.getBoundingClientRect().height;
+    const adjuster = this.touchDevice ? -15 : -15;
+    if (scrollTop < this.boundaries[1] - underNaviHeight + adjuster) {
+      // スクロール位置がナビゲーションより上だったらfixedクラスを外す
+      this.nav.classList.remove('fixed');
+    } else {
+      if (this.touchDevice) {
+        if (scrollTop > this.scrollTopLast) {
+          // モバイルで下向き移動の時はfixedクラスを外す
+          this.nav.classList.remove('fixed');
+        } else {
+          // モバイル上向き移動の時はfixedにしてフェードインさせる
+          this.nav.classList.add('fixed');
+        }
+      } else {
+        // PCで2番目以降のエリアだったらfixedにする
+        this.nav.classList.add('fixed');
       }
     }
   }
@@ -196,6 +225,10 @@ export default class Portfolio {
     window.addEventListener('resize', () => {
       this.getBoundaries();
       this.setBG(this.transitionSpeed);
+      this.setFixedClass();
+    });
+  }
+
     });
   }
 
