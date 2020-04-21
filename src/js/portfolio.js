@@ -1,4 +1,5 @@
 import Slider from './slider.js';
+import SlideContents from './slide_contents.json';
 
 /**
  * ポートフォリオ画面の表示・イベントのクラス
@@ -20,7 +21,7 @@ export default class Portfolio {
     this.getBoundaries();
     this.setBG(0);
     this.addEvents();
-    new Slider(this.allSelector.querySelector('#about'), 5000);
+    this.setSliderProp(this.allSelector.querySelector('#profile'));
     this.hideLoadingAnime();
   }
 
@@ -42,6 +43,17 @@ export default class Portfolio {
       this.wrapper.removeChild(img);
     };
   }
+
+  /**
+   * スライダークラスの呼び出し
+   * @param {obj} target スライダーを表示するエレメント
+   * @param {number} ms オートプレイのスピード
+   */
+  setSliderProp(target) {
+    const ms = 5000;
+    const dispTileList = false;
+    const loopLimit = 1;
+    this.slider = new Slider(target, SlideContents, ms, loopLimit, dispTileList);
   }
 
   /**
@@ -200,6 +212,7 @@ export default class Portfolio {
     this.addEventUnload();
     this.addEventScrolle();
     this.addEventResize();
+    this.addEventArrowKeyDown();
   }
 
   /**
@@ -229,6 +242,19 @@ export default class Portfolio {
     });
   }
 
+  /**
+   * スライダーの左右キー押下に応じたイベントを付与する
+   */
+  addEventArrowKeyDown() {
+    document.addEventListener('keydown', event => {
+      const scrollTop = this.getScrollTop();
+      if (scrollTop < this.boundaries[2]) {
+        if (event.key === 'ArrowRight') {
+          this.slider.next.click();
+        } else if (event.key === 'ArrowLeft') {
+          this.slider.prev.click();
+        }
+      }
     });
   }
 
