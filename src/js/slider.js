@@ -4,27 +4,27 @@
 export default class Slider {
   /**
    * constructor
-   * @param {object} target スライダーを表示するエレメント
-   * @param {number} ms オートプレイのスピード
-   * @param {number} loopLimit ループ回数
+   * @param {HTMLElement} target
+   * @param {object} slideContents
+   * @param {number} ms
+   * @param {number} loopLimit
+   * @param {boolean} dispTileList
    */
-  constructor(target, ms = 5000, loopLimit = 0) {
-    this.target = target;
-    this.time = ms;
+  constructor(target, slideContents, ms = 4500, loopLimit = 1, dispTileList = false) {
+    this.target = document.querySelector('#profile');
+    this.playSpeed = ms;
     this.limit = loopLimit;
-
-    this.setView = [
-      'dist/img/slider01.jpg',
-      'dist/img/slider02.jpg',
-      'dist/img/slider03.jpg',
-      'dist/img/slider04.jpg',
-    ];
-    this.view = this.target.querySelector('.slideView');
+    this.dispTitleList = dispTileList;
+    this.screen = this.target.querySelector('.slideScreen');
     this.prev = this.target.querySelector('.slidePrev');
     this.next = this.target.querySelector('.slideNext');
-    this.thumbnailList = this.target.querySelector('.thumbnailList');
-    this.current = 0;
+    this.slideNaviList = this.target.querySelector('.slideNaviList');
     this.clickBtn = true;
+    this.current = 0; // 現在のスライド
+    this.allSlideCount = 0; // スライドの総数
+    this.playCount = 0; // オートプレイのカウント
+    this.contents = [];
+    this.convertToElem(slideContents);
     this.setSlider();
   }
 
@@ -32,11 +32,122 @@ export default class Slider {
    * スライダー
    */
   setSlider() {
-    this.createThumbnailItem();
     this.setPrevsEvent();
     this.setNextsEvent();
+    this.addEventTouch();
+    this.addEventScreenClick();
     this.autoPlay();
-    window.onload = this.autoPlay();
+  }
+
+  /**
+   * JsonデータからHTMLエレメントを生成する
+   * @param {array} dataList
+   */
+  convertToElem(dataList) {
+    // タイトルリスト部分のスタイルを設定する
+    if (this.dispTitleList) {
+      this.slideNaviList.classList.add('titleList');
+    } else {
+      this.slideNaviList.classList.add('indicator');
+    }
+
+    dataList.forEach((data, i) => {
+      // リストタグを作る
+      const list = this.createNaviElem(data, i);
+
+      // コンテンツ表示部分を作る
+      const screen = document.createElement('div');
+      this.contentIdPrefix = 'slideContents_';
+      screen.setAttribute('id', this.contentIdPrefix + i);
+      screen.classList.add('slide-contents');
+
+      // コンテンツを作る
+      const h3 = document.createElement('h3');
+      h3.textContent = data.title;
+      const contents = document.createElement('div');
+      data.contents.forEach(content => {
+        let elem = document.createElement(content.name);
+        elem = this.createContentsElem(elem, content);
+        contents.appendChild(elem);
+      });
+
+      // コンテンツ表示部分に格納する
+      screen.appendChild(h3);
+      screen.appendChild(contents);
+      this.contents.push(screen);
+      if (i === 0) {
+        this.screen.appendChild(screen);
+      }
+      // タイトルリストのクリックイベントを設定する
+      this.setListClickEvent(list, i);
+    });
+    this.allSlideCount = this.contents.length;
+  }
+
+  /**
+   * スライドのタイトルリストを作る
+   * @param {str} data
+   * @param {num} idx
+   * @return {obj}
+   */
+  createNaviElem(data, idx) {
+    const list = document.createElement('li');
+    this.listIdPrefix = 'slideLbl_';
+    list.setAttribute('id', this.listIdPrefix + idx);
+    if (!idx) {
+      list.classList.add('selected');
+    }
+    if (this.dispTitleList) {
+      list.textContent = data.title;
+    }
+    this.slideNaviList.appendChild(list);
+    return list;
+  }
+
+  /**
+   * スライダーメインコンテンツを作る
+   * @param {obj} outer
+   * @param {obj} content
+   * @return {obj}
+   */
+  createContentsElem(outer, content) {
+    if (Array.isArray(content.data) && content.name === 'ul') {
+      content.data.forEach(child => {
+        const li = document.createElement('li');
+        li.textContent = child;
+        outer.appendChild(li);
+      });
+    } else {
+      outer.innerHTML = content.data;
+      if (content.styles) {
+        Object.keys(content.styles).forEach(styleName => {
+          outer.style[styleName] = content.styles[styleName];
+        });
+      }
+    }
+    return outer;
+  }
+
+  /**
+   * list押下時のイベントをセット
+   * @param {object} list
+   * @param {number} length
+   * @param {number} showTarget
+   * @param {number} hideTarget
+   */
+  setListClickEvent(list, showTarget) {
+    list.addEventListener('click', () => {
+      for (let j = 0; j < this.slideNaviList.children.length; j++) {
+        this.slideNaviList.children[j].classList.remove('selected');
+      }
+      list.classList.add('selected');
+      this.current = parseInt(list.id.split('_')[1]);
+
+      this.setScreenStyleBefore();
+      this.screen.textContent = null;
+      this.screen.appendChild(this.contents[showTarget]);
+      this.changeScreenStyle();
+    });
   }
 
   /**
@@ -46,18 +157,18 @@ export default class Slider {
     this.prev.addEventListener('click', () => {
       if (this.clickBtn === true) {
         this.clickBtn = false;
-        this.view.classList.add('appear');
-        this.thumbnailList.children[this.current].classList.remove('selected');
+        this.setScreenStyleBefore();
+
+        this.slideNaviList.children[this.current].classList.remove('selected');
         this.current--;
         if (this.current < 0) {
-          this.current = this.setView.length - 1;
+          this.current = this.contents.length - 1;
         }
-        this.view.src = this.setView[this.current];
-        this.thumbnailList.children[this.current].classList.add('selected');
-        setTimeout('view.classList.remove("appear");', 2100);
-        setTimeout(() => {
-          this.clickBtn = true;
-        }, 2100);
+        this.slideNaviList.children[this.current].classList.add('selected');
+
+        this.screen.textContent = null;
+        this.screen.appendChild(this.contents[this.current]);
+        this.changeScreenStyle();
       } else {
         return false;
       }
@@ -71,18 +182,18 @@ export default class Slider {
     this.next.addEventListener('click', () => {
       if (this.clickBtn === true) {
         this.clickBtn = false;
-        this.view.classList.add('appear');
-        this.thumbnailList.children[this.current].classList.remove('selected');
+        this.setScreenStyleBefore();
+
+        this.slideNaviList.children[this.current].classList.remove('selected');
         this.current++;
-        if (this.current > this.setView.length - 1) {
+        if (this.current > this.contents.length - 1) {
           this.current = 0;
         }
-        this.view.src = this.setView[this.current];
-        this.thumbnailList.children[this.current].classList.add('selected');
-        setTimeout('view.classList.remove("appear");', 2100);
-        setTimeout(() => {
-          this.clickBtn = true;
-        }, 2100);
+        this.slideNaviList.children[this.current].classList.add('selected');
+
+        this.screen.textContent = null;
+        this.screen.appendChild(this.contents[this.current]);
+        this.changeScreenStyle();
       } else {
         return false;
       }
@@ -90,42 +201,92 @@ export default class Slider {
   }
 
   /**
-   * オートプレイ
+   * スライド部分の変化直前スタイル
    */
-  autoPlay() {
-    setTimeout(() => {
-      this.next.click();
-      this.autoPlay();
-    }, this.time);
+  setScreenStyleBefore() {
+    this.clickBtn = true;
+    this.screen.style.opacity = 0.2;
+    this.screen.style.transitionDuration = '';
   }
 
   /**
-   * ページャーみたいな部分を作る
+   * スライド部分のリストor矢印クリック時のスタイル
    */
-  createThumbnailItem() {
-    let list;
-    let image;
-    for (let i = 0; i < this.setView.length; i++) {
-      list = document.createElement('li');
-      image = document.createElement('img');
-      image.src = this.setView[i];
-      list.appendChild(image);
-      this.thumbnailList.appendChild(list);
+  changeScreenStyle() {
+    setTimeout(() => {
+      this.screen.style.opacity = 1;
+      this.screen.style.transitionDuration = 700 + 'ms';
+      this.clickBtn = true;
+    }, 20);
+  }
 
-      if (i === 0) {
-        list.classList.add('selected');
-      }
-
-      list.addEventListener('click', () => {
-        this.view.src = this.children[0].src;
-
-        for (let j = 0; j < this.thumbnailList.children.length; j++) {
-          this.thumbnailList.children[j].classList.remove('selected');
+  /**
+   * オートプレイ
+   */
+  autoPlay() {
+    if (this.limit > 0) {
+      this.intarval = setInterval(() => {
+        this.next.click();
+        this.playCount++;
+        if (this.limit * this.allSlideCount <= this.playCount) {
+          clearInterval(this.intarval);
         }
-        this.classList.add('selected');
-        let currentImage = this.children[0].src.slice(-6, -4);
-        this.current = Number(currentImage) - 1;
-      });
+      }, this.playSpeed);
     }
+  }
+
+  /**
+   * スワイプに応じたイベントを付与する
+   */
+  addEventTouch() {
+    this.screen.addEventListener(
+      'touchstart',
+      event => {
+        this.touchStartX = event.changedTouches[0].pageX;
+      },
+      { passive: true }
+    );
+    this.screen.addEventListener(
+      'touchmove',
+      event => {
+        this.touchMoveX = event.changedTouches[0].pageX;
+      },
+      { passive: true }
+    );
+    this.screen.addEventListener(
+      'touchend',
+      () => {
+        this.swipeDist = 30;
+        // 方向判定&移動量判定
+        if (
+          this.touchStartX > this.touchMoveX &&
+          this.touchStartX > this.touchMoveX - this.swipeDist
+        ) {
+          this.next.click();
+        } else if (
+          this.touchStartX < this.touchMoveX &&
+          this.touchStartX < this.touchMoveX + this.swipeDist
+        ) {
+          this.prev.click();
+        }
+      },
+      { passive: true }
+    );
+  }
+
+  /**
+   * スクリーンクリック時のイベントを付与する
+   */
+  addEventScreenClick() {
+    this.screen.addEventListener(
+      'click',
+      () => {
+        // オートプレイ中だったら止める
+        if (this.limit && this.limit * this.allSlideCount >= this.playCount) {
+          clearInterval(this.intarval);
+        }
+      },
+      { passive: true }
+    );
   }
 }
