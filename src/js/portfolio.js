@@ -8,7 +8,8 @@ export default class Portfolio {
     this.anime;
     this.boundaries;
     this.transitionSpeed;
-    this.scrollTopCurrent = 0;
+    this.scrollTopPrev = 0; // 再読み込み前のスクロール位置
+    this.scrollTopLast = 0; // 1つ前のスクロール位置(スクロール方向判定用)
     this.touchDevice = this.isTouchDevice();
     this.allSelector = document.querySelector('body');
     this.wrapper = this.allSelector.querySelector('#wrapper');
@@ -103,10 +104,6 @@ export default class Portfolio {
     if (param !== undefined) {
       // 呼び出し元でスクロール位置の指定がある場合
       scrollTop = param;
-    } else if (this.scrollTopCurrent > 0) {
-      // 再読み込み後の場合
-      scrollTop = this.scrollTopCurrent;
-      this.scrollTopCurrent = 0;
     } else {
       // どちらでもない場合
       scrollTop = window.pageYOffset || document.documentElement.scrollTop;
@@ -147,14 +144,14 @@ export default class Portfolio {
   startAnimation(elem, option, time, speed) {
     const begin = new Date() - 0;
     this.anime = setInterval(() => {
-      var current = new Date() - begin;
+      let current = new Date() - begin;
       if (current > time) {
         clearInterval(this.anime);
         current = time;
       }
       Object.keys(option).forEach(optName => {
         elem.style[optName] = option[optName];
-        elem.style['transitionDuration'] = speed + 'ms';
+        elem.style.transitionDuration = speed + 'ms';
       });
     }, 10);
   }
@@ -207,17 +204,25 @@ export default class Portfolio {
    * スクロール位置を取得
    */
   addEventUnload() {
-    window.addEventListener('beforeunload', () => {
-      if (this.hasLocalStorage()) {
-        window.localStorage.setItem('sectionalPosition', window.pageYOffset);
-      }
-    });
-    window.addEventListener('unload', () => {
-      if (this.hasLocalStorage()) {
-        window.pageYOffset = window.localStorage.getItem('sectionalPosition');
-        this.scrollTopCurrent = window.pageYOffset || document.documentElement.scrollTop;
-      }
-    });
+    window.addEventListener(
+      'beforeunload',
+      () => {
+        if (this.hasLocalStorage()) {
+          window.localStorage.setItem('sectionalPosition', window.pageYOffset);
+        }
+      },
+      { once: true }
+    );
+    window.addEventListener(
+      'unload',
+      () => {
+        if (this.hasLocalStorage()) {
+          window.pageYOffset = window.localStorage.getItem('sectionalPosition');
+          this.scrollTopPrev = window.pageYOffset || document.documentElement.scrollTop;
+        }
+      },
+      { once: true }
+    );
   }
 
   /**
