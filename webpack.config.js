@@ -59,9 +59,5 @@ module.exports = {
     modules: [path.resolve(__dirname, 'src'), 'node_modules'],
     extensions: ['.js', '.css'],
   },
-  externals: [
-    {
-      jquery: 'jQuery',
-    },
-  ],
+  externals: [],
 };
