@@ -11,7 +11,7 @@ export default class Slider {
    * @param {boolean} dispTileList
    */
   constructor(target, slideContents, ms = 4500, loopLimit = 1, dispTileList = false) {
-    this.target = document.querySelector('#profile');
+    this.target = target;
     this.playSpeed = ms;
     this.limit = loopLimit;
     this.dispTitleList = dispTileList;
@@ -60,19 +60,20 @@ export default class Slider {
       this.contentIdPrefix = 'slideContents_';
       screen.setAttribute('id', this.contentIdPrefix + i);
       screen.classList.add('slide-contents');
+      if (data.styles) {
+        Object.keys(data.styles).forEach(styleName => {
+          screen.style[styleName] = data.styles[styleName];
+        });
+      }
 
       // コンテンツを作る
-      const h3 = document.createElement('h3');
-      h3.textContent = data.title;
       const contents = document.createElement('div');
       data.contents.forEach(content => {
-        let elem = document.createElement(content.name);
-        elem = this.createContentsElem(elem, content);
+        let elem = this.createContentsElem(content);
         contents.appendChild(elem);
       });
 
       // コンテンツ表示部分に格納する
-      screen.appendChild(h3);
       screen.appendChild(contents);
       this.contents.push(screen);
       if (i === 0) {
@@ -106,26 +107,34 @@ export default class Slider {
 
   /**
    * スライダーメインコンテンツを作る
-   * @param {obj} outer
    * @param {obj} content
    * @return {obj}
    */
-  createContentsElem(outer, content) {
-    if (Array.isArray(content.data) && content.name === 'ul') {
+  createContentsElem(content) {
+    let elem;
+    const listElems = { ul: 'li', ol: 'li', dl: { dt: 'dd' } };
+    if (Object.keys(listElems).includes(content.name)) {
+      elem = document.createElement(content.name);
       content.data.forEach(child => {
-        const li = document.createElement('li');
+        const li = document.createElement(listElems[content.name]);
         li.textContent = child;
-        outer.appendChild(li);
+        elem.appendChild(li);
       });
     } else {
-      outer.innerHTML = content.data;
+      elem = document.createElement(content.name);
+      if (content.data) elem.innerHTML = content.data;
       if (content.styles) {
         Object.keys(content.styles).forEach(styleName => {
-          outer.style[styleName] = content.styles[styleName];
+          elem.style[styleName] = content.styles[styleName];
+        });
+      }
+      if (content.classList) {
+        content.classList.forEach(child => {
+          elem.classList.add(child);
         });
       }
     }
-    return outer;
+    return elem;
   }
 
   /**
