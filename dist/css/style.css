@@ -82,7 +82,7 @@ p {
 }
 
 /****************************************
-  section 
+  section
 ****************************************/
 .section {
   width: 100%;
@@ -333,6 +333,23 @@ h1 {
 #works {
   height: auto;
   width: 90%;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+#works .contents-box {
+  width: calc(calc(90% - 15%) / 2);
+}
+
+#works .contents-box:nth-child(2n + 1) {
+  margin-left: 2.5%;
+  margin-right: 0%;
+}
+
+#works .contents-box:nth-child(2n) {
+  margin-left: 0%;
+  margin-right: 2.5%;
 }
 
 #works .contents-inner-area div {
@@ -383,13 +400,45 @@ h1 {
   font-weight: normal;
 }
 
+/* iPad Pro(12.9)(横)以下 */
+@media screen and (max-width: 1366px) {
+  #works .contents-box {
+    padding: 30px 10px 30px 10px;
+  }
+}
+
+/* iPad(横)、iPad Pro(12.9)(縦)以下 */
+@media screen and (max-width: 1024px) {
+  #works .contents-box {
+    padding: 10px;
+  }
+}
+
+/* iPad(縦)以下 */
+@media screen and (max-width: 768px) {
+  #works .contents-box,
+  #works .contents-box:nth-child(2n + 1),
+  #works .contents-box:nth-child(2n) {
+    margin: auto;
+  }
+
+  #works .contents-box:not(:first-child) {
+    margin-top: 10%;
+  }
+
+  #works .contents-box:first-child {
+    margin-top: 0;
+  }
+
+  #works .contents-box,
+  #works .contents-box div {
+    width: 90%;
+  }
+}
+
 @media screen and (max-width: 600px) {
   #works {
     padding: 10px 5px 50px 5px;
-  }
-
-  #works .contents-box div {
-    width: 90%;
   }
 
   #works dd {
@@ -404,18 +453,24 @@ h1 {
 ****************************************/
 #skills {
   width: 90%;
-  max-width: 1200px;
+  height: auto;
   display: flex;
+  justify-content: center;
   flex-wrap: wrap;
-  justify-content: flex-start;
 }
 
-#skils .contents-box {
-  width: calc(50% - 50px);
-  min-width: 300px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+#skills .contents-box {
+  width: calc(calc(90% - 15%) / 2);
+}
+
+#skills .contents-box:nth-child(2n + 1) {
+  margin-left: 2.5%;
+  margin-right: 0%;
+}
+
+#skills .contents-box:nth-child(2n) {
+  margin-left: 0%;
+  margin-right: 2.5%;
 }
 
 #skills h3 {
@@ -485,8 +540,19 @@ h1 {
   color: #333;
 }
 
-/* スマホ横以下 */
-@media screen and (max-width: 600px) {
+/* iPad Pro(12.9)(横)以下 */
+@media screen and (max-width: 1366px) {
+  #skills .contents-box {
+    padding: 30px 10px 30px 10px;
+  }
+}
+
+/* iPad(横)、iPad Pro(12.9)(縦)以下 */
+@media screen and (max-width: 1024px) {
+  #skills .contents-box {
+    padding: 10px;
+  }
+
   #skills td,
   #skills th {
     padding: 0.75rem 0rem 0.75rem calc(0.75em / 2);
@@ -501,6 +567,28 @@ h1 {
   #skills th:nth-child(3) {
     padding-right: 0.75rem;
     min-width: calc(5em + 1rem);
+  }
+}
+
+/* iPad(縦)以下 */
+@media screen and (max-width: 768px) {
+  #skills .contents-box,
+  #skills .contents-box:nth-child(2n + 1),
+  #skills .contents-box:nth-child(2n) {
+    margin: auto;
+  }
+
+  #skills .contents-box:not(:first-child) {
+    margin-top: 10%;
+  }
+
+  #skills .contents-box:first-child {
+    margin-top: 0;
+  }
+
+  #skills .contents-box,
+  #skills .contents-box div {
+    width: 90%;
   }
 }
 
