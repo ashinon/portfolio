@@ -172,7 +172,6 @@ h3 {
 /****************************************
   section内共通デザインボックス
 ****************************************/
-.slideScreen,
 .contents-box {
   width: calc(90% - 50px);
   max-width: 1000px;
@@ -193,8 +192,7 @@ h3 {
   padding: 0;
 }
 
-.contents-inner-area p,
-.slide-contents p {
+.contents-inner-area p {
   width: 90%;
   margin: 0 auto;
   text-align: left;
@@ -313,6 +311,7 @@ h1 {
 ****************************************/
 #profile {
   height: auto;
+  width: 90%;
 }
 
 #profile h2 {
@@ -453,7 +452,7 @@ h1 {
 }
 
 #skills .contents-box {
-  width: calc(calc(90% - 15%) / 2);
+  width: calc((90% - 15%) / 2);
 }
 
 #skills .contents-box:nth-child(2n + 1) {
@@ -792,7 +791,7 @@ h1 {
 ****************************************/
 .slider {
   width: 100%;
-  min-height: 380px;
+  min-height: 430px;
   margin: auto;
   position: relative;
 }
@@ -804,13 +803,14 @@ h1 {
 .slideArea {
   margin: auto;
   display: flex;
-  flex-direction: row;
-  justify-content: space-around;
+  align-content: center;
+  justify-content: center;
 }
 
 .slideScreen {
-  width: calc(90% * 0.9 - 50px);
-  min-height: 220px;
+  width: 80%;
+  max-width: 2000px;
+  min-height: 320px;
   margin: auto 0;
   padding: 30px;
   display: flex;
@@ -822,16 +822,14 @@ h1 {
 }
 
 .slider i {
-  /* height: 100%; */
-  width: calc(5% + 25px);
+  width: calc(5%+25px);
   min-width: 50px;
-  /* margin: auto 0; */
   font-size: 100px;
   position: relative;
   cursor: pointer;
+  z-index: 1;
 }
 
-.slider i::before,
 .slider i::before {
   color: rgba(255, 255, 255, 0.9);
   text-shadow: 0px 3px 5px rgba(60, 60, 60, 0.2);
@@ -869,6 +867,12 @@ h1 {
 .slide-contents li {
   min-width: calc(50% - 2.5em);
   margin: 0 1.75em 0.75em 0;
+}
+
+.slide-contents p {
+  width: 90%;
+  margin: 0 auto;
+  text-align: left;
 }
 
 /* iPadまで */
