@@ -827,7 +827,6 @@ h1 {
   font-size: 100px;
   position: relative;
   cursor: pointer;
-  z-index: 1;
 }
 
 .slider i::before {
