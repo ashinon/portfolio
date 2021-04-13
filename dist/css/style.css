@@ -82,7 +82,7 @@ p {
 }
 
 /****************************************
-  section 
+  section
 ****************************************/
 .section {
   width: 100%;
@@ -172,7 +172,6 @@ h3 {
 /****************************************
   section内共通デザインボックス
 ****************************************/
-.slideScreen,
 .contents-box {
   width: calc(90% - 50px);
   max-width: 1000px;
@@ -193,8 +192,7 @@ h3 {
   padding: 0;
 }
 
-.contents-inner-area p,
-.slide-contents p {
+.contents-inner-area p {
   width: 90%;
   margin: 0 auto;
   text-align: left;
@@ -298,13 +296,6 @@ h1 {
     max-height: 100%;
   }
 
-  #bg-photo {
-    height: auto;
-    min-height: 125px;
-    background-size: 200% auto;
-    background-position: top left;
-  }
-
   h1 {
     margin: auto 20px auto 20px;
     text-align: left;
@@ -320,6 +311,7 @@ h1 {
 ****************************************/
 #profile {
   height: auto;
+  width: 90%;
 }
 
 #profile h2 {
@@ -333,6 +325,23 @@ h1 {
 #works {
   height: auto;
   width: 90%;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+#works .contents-box {
+  width: calc(calc(90% - 15%) / 2);
+}
+
+#works .contents-box:nth-child(2n + 1) {
+  margin-left: 2.5%;
+  margin-right: 0%;
+}
+
+#works .contents-box:nth-child(2n) {
+  margin-left: 0%;
+  margin-right: 2.5%;
 }
 
 #works .contents-inner-area div {
@@ -383,13 +392,45 @@ h1 {
   font-weight: normal;
 }
 
+/* iPad Pro(12.9)(横)以下 */
+@media screen and (max-width: 1366px) {
+  #works .contents-box {
+    padding: 30px 10px 30px 10px;
+  }
+}
+
+/* iPad(横)、iPad Pro(12.9)(縦)以下 */
+@media screen and (max-width: 1024px) {
+  #works .contents-box {
+    padding: 10px;
+  }
+}
+
+/* iPad(縦)以下 */
+@media screen and (max-width: 768px) {
+  #works .contents-box,
+  #works .contents-box:nth-child(2n + 1),
+  #works .contents-box:nth-child(2n) {
+    margin: auto;
+  }
+
+  #works .contents-box:not(:first-child) {
+    margin-top: 10%;
+  }
+
+  #works .contents-box:first-child {
+    margin-top: 0;
+  }
+
+  #works .contents-box,
+  #works .contents-box div {
+    width: 90%;
+  }
+}
+
 @media screen and (max-width: 600px) {
   #works {
     padding: 10px 5px 50px 5px;
-  }
-
-  #works .contents-box div {
-    width: 90%;
   }
 
   #works dd {
@@ -404,18 +445,24 @@ h1 {
 ****************************************/
 #skills {
   width: 90%;
-  max-width: 1200px;
+  height: auto;
   display: flex;
+  justify-content: center;
   flex-wrap: wrap;
-  justify-content: flex-start;
 }
 
-#skils .contents-box {
-  width: calc(50% - 50px);
-  min-width: 300px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+#skills .contents-box {
+  width: calc((90% - 15%) / 2);
+}
+
+#skills .contents-box:nth-child(2n + 1) {
+  margin-left: 2.5%;
+  margin-right: 0%;
+}
+
+#skills .contents-box:nth-child(2n) {
+  margin-left: 0%;
+  margin-right: 2.5%;
 }
 
 #skills h3 {
@@ -485,8 +532,19 @@ h1 {
   color: #333;
 }
 
-/* スマホ横以下 */
-@media screen and (max-width: 600px) {
+/* iPad Pro(12.9)(横)以下 */
+@media screen and (max-width: 1366px) {
+  #skills .contents-box {
+    padding: 30px 10px 30px 10px;
+  }
+}
+
+/* iPad(横)、iPad Pro(12.9)(縦)以下 */
+@media screen and (max-width: 1024px) {
+  #skills .contents-box {
+    padding: 10px;
+  }
+
   #skills td,
   #skills th {
     padding: 0.75rem 0rem 0.75rem calc(0.75em / 2);
@@ -501,6 +559,28 @@ h1 {
   #skills th:nth-child(3) {
     padding-right: 0.75rem;
     min-width: calc(5em + 1rem);
+  }
+}
+
+/* iPad(縦)以下 */
+@media screen and (max-width: 768px) {
+  #skills .contents-box,
+  #skills .contents-box:nth-child(2n + 1),
+  #skills .contents-box:nth-child(2n) {
+    margin: auto;
+  }
+
+  #skills .contents-box:not(:first-child) {
+    margin-top: 10%;
+  }
+
+  #skills .contents-box:first-child {
+    margin-top: 0;
+  }
+
+  #skills .contents-box,
+  #skills .contents-box div {
+    width: 90%;
   }
 }
 
@@ -711,7 +791,7 @@ h1 {
 ****************************************/
 .slider {
   width: 100%;
-  min-height: 380px;
+  min-height: 430px;
   margin: auto;
   position: relative;
 }
@@ -723,13 +803,14 @@ h1 {
 .slideArea {
   margin: auto;
   display: flex;
-  flex-direction: row;
-  justify-content: space-around;
+  align-content: center;
+  justify-content: center;
 }
 
 .slideScreen {
-  width: calc(90% * 0.9 - 50px);
-  min-height: 220px;
+  width: 80%;
+  max-width: 2000px;
+  min-height: 320px;
   margin: auto 0;
   padding: 30px;
   display: flex;
@@ -741,16 +822,14 @@ h1 {
 }
 
 .slider i {
-  /* height: 100%; */
-  width: calc(5% + 25px);
+  width: calc(5%+25px);
   min-width: 50px;
-  /* margin: auto 0; */
   font-size: 100px;
   position: relative;
   cursor: pointer;
+  z-index: 1;
 }
 
-.slider i::before,
 .slider i::before {
   color: rgba(255, 255, 255, 0.9);
   text-shadow: 0px 3px 5px rgba(60, 60, 60, 0.2);
@@ -788,6 +867,12 @@ h1 {
 .slide-contents li {
   min-width: calc(50% - 2.5em);
   margin: 0 1.75em 0.75em 0;
+}
+
+.slide-contents p {
+  width: 90%;
+  margin: 0 auto;
+  text-align: left;
 }
 
 /* iPadまで */
