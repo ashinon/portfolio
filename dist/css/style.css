@@ -298,13 +298,6 @@ h1 {
     max-height: 100%;
   }
 
-  #bg-photo {
-    height: auto;
-    min-height: 125px;
-    background-size: 200% auto;
-    background-position: top left;
-  }
-
   h1 {
     margin: auto 20px auto 20px;
     text-align: left;
