@@ -96,7 +96,6 @@ p {
 .section h2 {
   width: 100%;
   max-width: 1200px;
-  margin: 55px auto 50px auto;
   position: relative;
   font-size: 38px;
   line-height: 38px;
@@ -338,7 +337,7 @@ h1 {
 }
 
 #works .contents-box {
-  width: calc(calc(90% - 15%) / 2);
+  width: calc((90% - 15%) / 2);
 }
 
 #works .contents-box:nth-child(2n + 1) {
