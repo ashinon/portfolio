@@ -41,13 +41,13 @@
                 <a href="#home"><i class="fas fa-home"></i>HOME</a>
               </li>
               <li>
-                <a href="#profile"><i class="fa fa-user"></i>PROFILE</a>
-              </li>
-              <li>
                 <a href="#works"><i class="fa fa-laptop-code"></i>WORKS</a>
               </li>
               <li>
                 <a href="#skills"><i class="fas fa-tasks"></i>SKILLS</a>
+              </li>
+              <li>
+                <a href="#profile"><i class="fa fa-user"></i>PROFILE</a>
               </li>
             </ul>
           </nav>
@@ -60,26 +60,10 @@
           </p>
         </div>
       </div>
-      <!-- profile -->
-      <div id="profile" class="section">
-        <h2>
-          <i class="fa fa-user"></i>PROFILE<br />
-          <span>プロフィール</span>
-        </h2>
-        <!-- Slider -->
-        <div class="slider">
-          <div class="slideNavi">
-            <ul class="slideNaviList"></ul>
-          </div>
-          <div class="slideArea">
-            <i class="slidePrev fas fa-caret-left"></i>
-            <div class="slideScreen"></div>
-            <i class="slideNext fas fa-caret-right"></i>
-          </div>
-        </div>
-      </div>
+      <!-- works -->
       <div id="works" class="section">
-        <h2><i class="fa fa-laptop-code"></i>WORKS<br /><span>作品</span></h2>
+        <h2><i class="far fa-file-code"></i>WORKS</h2>
+        <!-- contents-box -->
         <div class="contents-box">
           <div class="contents-inner-area">
             <h3>ポートフォリオ</h3>
@@ -87,24 +71,27 @@
             <p>
               0からどの程度のものを作れるのか分かるようにしたかったため、プラグインは使わず、フルスクラッチで作成しました。<br />
             </p>
-            <div>
-              <h4>使用した技術</h4>
-              <dl class="">
-                <dt>言語</dt>
-                <dd>JavaScript</dd>
-              </dl>
-              <dl>
-                <dt>ツール</dt>
-                <dd>
-                  Webpack(モジュールバンドラー)、babel(トランスパイラ)
-                </dd>
-              </dl>
-              <h4>実装した機能</h4>
-              <ul>
-                <li>スクロールに応じて背景色が変わる機能</li>
-                <li>追従ヘッダー</li>
-              </ul>
-            </div>
+            <details>
+              <summary>詳しく見る</summary>
+              <div>
+                <h4>使用した技術</h4>
+                <dl class="">
+                  <dt>言語</dt>
+                  <dd>JavaScript</dd>
+                </dl>
+                <dl>
+                  <dt>ツール</dt>
+                  <dd>
+                    Webpack(モジュールバンドラー)、babel(トランスパイラ)
+                  </dd>
+                </dl>
+                <h4>実装した機能</h4>
+                <ul>
+                  <li>スクロールに応じて背景色が変わる機能</li>
+                  <li>追従ヘッダー</li>
+                </ul>
+              </div>
+            </details>
           </div>
         </div>
         <div class="contents-box">
@@ -115,25 +102,28 @@
               このポートフォリオでも使用しているスライダーです。<br />
               手軽に追加出来るように依存ライブラリはなしで単一モジュールで動くように作りました。<br />
             </p>
-            <div>
-              <h4>使用した技術</h4>
-              <dl class="">
-                <dt>言語</dt>
-                <dd>JavaScript(ES6)</dd>
-              </dl>
-              <dl>
-                <dt>ツール</dt>
-                <dd>
-                  Webpack(モジュールバンドラー)、babel(トランスパイラ)
-                </dd>
-              </dl>
-            </div>
+            <details>
+              <summary>詳しく見る</summary>
+              <div>
+                <h4>使用した技術</h4>
+                <dl class="">
+                  <dt>言語</dt>
+                  <dd>JavaScript(ES6)</dd>
+                </dl>
+                <dl>
+                  <dt>ツール</dt>
+                  <dd>
+                    Webpack(モジュールバンドラー)、babel(トランスパイラ)
+                  </dd>
+                </dl>
+              </div>
+            </details>
           </div>
         </div>
       </div>
       <!-- SKILLS -->
       <div id="skills" class="section">
-        <h2><i class="fas fa-tasks"></i>SKILLS<br /><span>スキル/レベル</span></h2>
+        <h2><i class="fas fa-tasks"></i>SKILLS</h2>
         <div class="contents-box">
           <div class="contents-inner-area">
             <h3>フロントエンド</h3>
@@ -270,6 +260,22 @@
         </div>
       </div>
       <!-- SKILLS -->
+      <!-- profile -->
+      <div id="profile" class="section">
+        <h2><i class="fas fa-paw"></i>PROFILE</h2>
+        <!-- Slider -->
+        <div class="slider">
+          <div class="slideNavi">
+            <ul class="slideNaviList"></ul>
+          </div>
+          <div class="slideArea">
+            <i class="slidePrev fas fa-caret-left"></i>
+            <div class="slideScreen"></div>
+            <i class="slideNext fas fa-caret-right"></i>
+          </div>
+        </div>
+      </div>
+      <!-- profile -->
     </div>
   </body>
 </html>

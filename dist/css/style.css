@@ -96,7 +96,7 @@ p {
 .section h2 {
   width: 100%;
   max-width: 1200px;
-  margin: 55px auto 50px auto;
+  margin: 55px 0 50px 0;
   position: relative;
   font-size: 38px;
   line-height: 38px;
@@ -175,14 +175,12 @@ h3 {
 .contents-box {
   width: calc(90% - 50px);
   max-width: 1000px;
+  height: fit-content;
+  margin: 0 auto 30px auto;
   padding: 30px;
   text-align: center;
   background-image: radial-gradient(rgba(255, 255, 255, 1) 55%, rgba(255, 255, 255, 0.4) 100%);
   box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.1);
-}
-
-.contents-box {
-  margin: 0 auto 30px auto;
 }
 
 .contents-inner-area {
@@ -198,6 +196,20 @@ h3 {
   text-align: left;
 }
 
+/* 折り畳み */
+.contents-box details {
+  margin-top: 25px;
+}
+
+.contents-box summary {
+  outline: none;
+}
+
+@media screen and (-ms-high-contrast: active), screen and (-ms-high-contrast: none) {
+  .contents-box summary {
+    display: none;
+  }
+}
 /* iPadまで */
 @media screen and (min-width: 601px) and (max-width: 767px) {
   .contents-box {
@@ -265,16 +277,16 @@ h1 {
 }
 
 #introduction {
-  width: 100%;
+  width: 90%;
   height: auto;
   min-height: 100px;
-  max-height: calc(100% - 195px);
+  margin: 0 auto;
   position: relative;
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   flex-wrap: wrap;
   position: static;
   z-index: -1;
@@ -298,7 +310,7 @@ h1 {
 
   #bg-photo {
     height: auto;
-    min-height: 125px;
+    min-height: 200px;
     background-size: 200% auto;
     background-position: top left;
   }
@@ -338,7 +350,7 @@ h1 {
 }
 
 #works .contents-box {
-  width: calc(calc(90% - 15%) / 2);
+  width: calc((90% - 15%) / 2);
 }
 
 #works .contents-box:nth-child(2n + 1) {
