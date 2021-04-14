@@ -175,14 +175,12 @@ h3 {
 .contents-box {
   width: calc(90% - 50px);
   max-width: 1000px;
+  height: fit-content;
+  margin: 0 auto 30px auto;
   padding: 30px;
   text-align: center;
   background-image: radial-gradient(rgba(255, 255, 255, 1) 55%, rgba(255, 255, 255, 0.4) 100%);
   box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.1);
-}
-
-.contents-box {
-  margin: 0 auto 30px auto;
 }
 
 .contents-inner-area {
@@ -198,6 +196,20 @@ h3 {
   text-align: left;
 }
 
+/* 折り畳み */
+.contents-box details {
+  margin-top: 25px;
+}
+
+.contents-box summary {
+  outline: none;
+}
+
+@media screen and (-ms-high-contrast: active), screen and (-ms-high-contrast: none) {
+  .contents-box summary {
+    display: none;
+  }
+}
 /* iPadまで */
 @media screen and (min-width: 601px) and (max-width: 767px) {
   .contents-box {
