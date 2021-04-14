@@ -265,16 +265,16 @@ h1 {
 }
 
 #introduction {
-  width: 100%;
+  width: 90%;
   height: auto;
   min-height: 100px;
-  max-height: calc(100% - 195px);
+  margin: 0 auto;
   position: relative;
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   flex-wrap: wrap;
   position: static;
   z-index: -1;
@@ -298,7 +298,7 @@ h1 {
 
   #bg-photo {
     height: auto;
-    min-height: 125px;
+    min-height: 200px;
     background-size: 200% auto;
     background-position: top left;
   }
