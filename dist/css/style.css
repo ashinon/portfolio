@@ -95,8 +95,7 @@ p {
 
 .section h2 {
   width: 100%;
-  max-width: 1200px;
-  margin: 55px 0 50px 0;
+  margin: 55px auto 50px auto;
   position: relative;
   font-size: 38px;
   line-height: 38px;
@@ -335,8 +334,8 @@ h1 {
 }
 
 #profile h2 {
-  width: 90%;
-  margin: 30px auto 30px auto;
+  margin-top: 30px;
+  margin-bottom: 30px;
 }
 
 /****************************************
