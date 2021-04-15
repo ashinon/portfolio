@@ -233,6 +233,7 @@ h3 {
 #home {
   width: 100%;
   height: auto;
+  min-height: 100vh;
   padding: 0px;
   position: relative;
   overflow: visible;
