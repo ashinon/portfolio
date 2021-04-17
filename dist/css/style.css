@@ -1,4 +1,16 @@
 @charset "UTF-8";
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: url(../webfonts/Open_Sans/OpenSans-Regular.ttf);
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 700;
+  src: url(../webfonts/Open_Sans/OpenSans-Bold.ttf);
+}
 
 * {
   margin: 0;
