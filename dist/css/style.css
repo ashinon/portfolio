@@ -1,4 +1,16 @@
 @charset "UTF-8";
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: url(../webfonts/Open_Sans/OpenSans-Regular.ttf);
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 700;
+  src: url(../webfonts/Open_Sans/OpenSans-Bold.ttf);
+}
 
 * {
   margin: 0;
@@ -95,8 +107,7 @@ p {
 
 .section h2 {
   width: 100%;
-  max-width: 1200px;
-  margin: 55px 0 50px 0;
+  margin: 55px auto 50px auto;
   position: relative;
   font-size: 38px;
   line-height: 38px;
@@ -198,7 +209,7 @@ h3 {
 
 /* 折り畳み */
 .contents-box details {
-  margin-top: 25px;
+  margin-top: 5px;
 }
 
 .contents-box summary {
@@ -233,6 +244,7 @@ h3 {
 #home {
   width: 100%;
   height: auto;
+  min-height: 100vh;
   padding: 0px;
   position: relative;
   overflow: visible;
@@ -254,12 +266,21 @@ h3 {
   align-content: center;
   flex-direction: column;
   justify-content: space-between;
-  background-image: url(../img/nami.jpg);
+  background-image: url(../img/nami.webp);
   background-repeat: no-repeat;
   background-position: left center;
   background-size: cover;
   background-attachment: fixed;
   z-index: 1;
+}
+
+/* safari */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  _::-webkit-full-page-media,
+  _:future,
+  :root #bg-photo {
+    background-image: url(../img/nami.jpg);
+  }
 }
 
 h1 {
@@ -334,8 +355,8 @@ h1 {
 }
 
 #profile h2 {
-  width: 90%;
-  margin: 30px auto 30px auto;
+  margin-top: 30px;
+  margin-bottom: 30px;
 }
 
 /****************************************
@@ -363,9 +384,55 @@ h1 {
   margin-right: 2.5%;
 }
 
-#works .contents-inner-area div {
+#works .contents-inner-area details div {
   width: 90%;
   padding-left: 20px;
+}
+
+#works .bg-work-img {
+  width: 100%;
+  height: auto;
+  min-height: 300px;
+  max-height: 500px;
+  position: relative;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  z-index: 0;
+}
+
+#works .bg-work-img::before {
+  /* content: ''; */
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-image: radial-gradient(rgba(255, 255, 255, 0) 55%, rgba(255, 255, 255, 0.2) 100%);
+  z-index: 1;
+}
+
+#works #img_portfolio {
+  background-image: url(../img/works_portfolio.webp);
+}
+
+#works #img_slideshow {
+  background-image: url(../img/works_slideshow.webp);
+}
+
+/* safari */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  _::-webkit-full-page-media,
+  _:future,
+  :root #works #img_portfolio {
+    background-image: url(../img/works_portfolio.jpg);
+  }
+
+  _::-webkit-full-page-media,
+  _:future,
+  :root #works #img_slideshow {
+    background-image: url(../img/works_slideshow.png);
+  }
 }
 
 #works h4 {
