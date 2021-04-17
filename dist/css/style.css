@@ -266,12 +266,21 @@ h3 {
   align-content: center;
   flex-direction: column;
   justify-content: space-between;
-  background-image: url(../img/nami.jpg);
+  background-image: url(../img/nami.webp);
   background-repeat: no-repeat;
   background-position: left center;
   background-size: cover;
   background-attachment: fixed;
   z-index: 1;
+}
+
+/* safari */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  _::-webkit-full-page-media,
+  _:future,
+  :root #bg-photo {
+    background-image: url(../img/nami.jpg);
+  }
 }
 
 h1 {
