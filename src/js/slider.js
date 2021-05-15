@@ -19,31 +19,99 @@ export default class Slider {
     this.prev = this.target.querySelector('.slidePrev');
     this.next = this.target.querySelector('.slideNext');
     this.slideNaviList = this.target.querySelector('.slideNaviList');
+    this.contentIdPrefix = 'slideContents_';
     this.clickBtn = true;
     this.current = 0; // 現在のスライド
     this.allSlideCount = 0; // スライドの総数
     this.playCount = 0; // オートプレイのカウント
-    this.contents = [];
-    this.convertToElem(slideContents);
-    this.setSlider();
+    this.contents = []; // jsonからhtmlに変換後のslideContents
+    this.imgDatas = {}; // NaturalSize等画像の詳細を格納
+    this.setSlider(slideContents).catch(error => console.error(error.message));
   }
 
   /**
-   * スライダー
+   * スライダーを作る
+   * @param {obj} slideContents
    */
-  setSlider() {
+  async setSlider(slideContents) {
+    this.maskSlideScreen();
+    await this.onceLoadImg(slideContents);
+    await this.convertToElem(slideContents);
+    this.hideScreenLoader(slideContents);
+    this.setFirstContent(this.contents[0]);
     this.setPrevsEvent();
     this.setNextsEvent();
     this.addEventTouch();
     this.addEventScreenClick();
+    this.addEventArrowKeyDown();
     this.autoPlay();
   }
 
   /**
-   * JsonデータからHTMLエレメントを生成する
-   * @param {array} dataList
+   * スライダー表示エリアを読み込み中表示(ローダー)で隠す
+   * @param {HTMLElement} toMask
    */
-  convertToElem(dataList) {
+  maskSlideScreen() {
+    this.screen.insertAdjacentHTML(
+      'beforeend',
+      '<div class="slide-contents-box box-for-loading"><div class="slideshow-loading-all">Loading...</div></div>'
+    );
+  }
+
+  /**
+   * 読み込み中表示を解除
+   */
+  hideScreenLoader() {
+    const target = this.screen.querySelector('.box-for-loading');
+    target.style.display = 'none';
+  }
+
+  /**
+   * 全ページの画像を全て一度読み込む
+   * @param {json} json
+   */
+  onceLoadImg(json) {
+    const pathList = this.getImgPathList(JSON.parse(JSON.stringify(json)));
+    pathList.forEach(path => {
+      const img = document.createElement('img');
+      img.src = path;
+      img.addEventListener(
+        'load',
+        () => {
+          img.remove();
+        },
+        { once: true }
+      );
+    });
+  }
+
+  /**
+   * json内の画像パスを全て取得する
+   * @param {json} json
+   * @return {array}
+   */
+  getImgPathList(json) {
+    const pathList = [];
+    json.forEach(page => {
+      page.contents.forEach(part => {
+        if (part.styles) {
+          if (Object.keys(part.styles).includes('background-image')) {
+            let path = part.styles['background-image'];
+            path = path.replace(/^url\(([^\\]+?.[a-z A-Z]+?)\)/, '$1');
+            pathList.push(path);
+            // this.setImgData(path);
+          }
+        }
+      });
+    });
+    return pathList;
+  }
+
+  /**
+   * JsonデータからHTMLエレメントを生成する
+   * @param {array} json
+   */
+  convertToElem(json) {
     // タイトルリスト部分のスタイルを設定する
     if (this.dispTitleList) {
       this.slideNaviList.classList.add('titleList');
@@ -51,34 +119,51 @@ export default class Slider {
       this.slideNaviList.classList.add('indicator');
     }
 
-    dataList.forEach((data, i) => {
+    json.forEach((page, i) => {
       // リストタグを作る
-      const list = this.createNaviElem(data, i);
+      const list = this.createNaviElem(page, i);
 
-      // コンテンツ表示部分を作る
-      const screen = document.createElement('div');
-      this.contentIdPrefix = 'slideContents_';
-      screen.setAttribute('id', this.contentIdPrefix + i);
-      screen.classList.add('slide-contents');
-      if (data.styles) {
-        Object.keys(data.styles).forEach(styleName => {
-          screen.style[styleName] = data.styles[styleName];
+      // コンテンツ表示部分(外側)を作る
+      let contentsBox = document.createElement('div');
+      contentsBox.setAttribute('id', this.contentIdPrefix + i);
+      contentsBox.classList.add('slide-contents-box');
+
+      // コンテンツ表示部分(内側)を作る
+      const contents = document.createElement('div');
+      contents.classList.add('slide-contents');
+      if (page.styles) {
+        Object.keys(page.styles).forEach(styleName => {
+          contents.style.setProperty(styleName, page.styles[styleName], '');
+        });
+      }
+      if (page.classes) {
+        page.classes.forEach(child => {
+          contents.classList.add(child);
         });
       }
 
       // コンテンツを作る
-      const contents = document.createElement('div');
-      data.contents.forEach(content => {
-        let elem = this.createContentsElem(content);
+      page.contents.forEach(part => {
+        let elem = this.buildElems(part);
+
+        // 画像表示用の要素の場合
+        if (elem.classList.contains('has-bg-img')) {
+          // コンテナを作る
+          const imgContainer = document.createElement('div');
+          imgContainer.classList.add('img-container');
+          // ローダーを付ける
+          const loader = this.createLoader();
+          imgContainer.appendChild(loader);
+          imgContainer.appendChild(elem);
+          elem = imgContainer;
+        }
         contents.appendChild(elem);
       });
 
       // コンテンツ表示部分に格納する
-      screen.appendChild(contents);
-      this.contents.push(screen);
-      if (i === 0) {
-        this.screen.appendChild(screen);
-      }
+      contentsBox.appendChild(contents);
+      this.contents.push(contentsBox);
+
       // タイトルリストのクリックイベントを設定する
       this.setListClickEvent(list, i);
     });
@@ -87,11 +172,11 @@ export default class Slider {
 
   /**
    * スライドのタイトルリストを作る
-   * @param {str} data
+   * @param {str} page
    * @param {num} idx
    * @return {obj}
    */
-  createNaviElem(data, idx) {
+  createNaviElem(page, idx) {
     const list = document.createElement('li');
     this.listIdPrefix = 'slideLbl_';
     list.setAttribute('id', this.listIdPrefix + idx);
@@ -99,7 +184,7 @@ export default class Slider {
       list.classList.add('selected');
     }
     if (this.dispTitleList) {
-      list.textContent = data.title;
+      list.textContent = page.title;
     }
     this.slideNaviList.appendChild(list);
     return list;
@@ -107,34 +192,102 @@ export default class Slider {
 
   /**
    * スライダーメインコンテンツを作る
-   * @param {obj} content
-   * @return {obj}
+   * @param {obj} part
+   * @return {HTMLElement}
    */
-  createContentsElem(content) {
-    let elem;
-    const listElems = { ul: 'li', ol: 'li', dl: { dt: 'dd' } };
-    if (Object.keys(listElems).includes(content.name)) {
-      elem = document.createElement(content.name);
-      content.data.forEach(child => {
-        const li = document.createElement(listElems[content.name]);
-        li.textContent = child;
-        elem.appendChild(li);
+  buildElems(part) {
+    if (!part.tag) {
+      throw new Error('タグが指定されていません');
+    }
+    let elem = this.createTag(part);
+    // スタイルを付与する
+    if (this.hasProperty(part, 'styles')) {
+      Object.keys(part.styles).forEach(styleName => {
+        elem.style.setProperty(styleName, part.styles[styleName], '');
       });
-    } else {
-      elem = document.createElement(content.name);
-      if (content.data) elem.innerHTML = content.data;
-      if (content.styles) {
-        Object.keys(content.styles).forEach(styleName => {
-          elem.style[styleName] = content.styles[styleName];
-        });
-      }
-      if (content.classList) {
-        content.classList.forEach(child => {
-          elem.classList.add(child);
-        });
-      }
+    }
+    // クラスを付与する
+    if (this.hasProperty(part, 'classes')) {
+      part.classes.forEach(child => {
+        elem.classList.add(child);
+      });
     }
     return elem;
+  }
+
+  /**
+   * 指定されたタグを生成する
+   * @param {obj} part
+   * @return {HTMLElement}
+   */
+  createTag(part) {
+    // tagで指定された要素を作る
+    let elem;
+    switch (part.tag) {
+      case 'dl':
+        elem = document.createElement(part.tag);
+        part.list.forEach(child => {
+          const div = document.createElement('div');
+          const dt = document.createElement('dt');
+          const dd = document.createElement('dd');
+          dt.textContent = child.dt;
+          dd.textContent = child.dd;
+          div.appendChild(dt);
+          div.appendChild(dd);
+          elem.appendChild(div);
+        });
+        break;
+      case 'ul':
+        elem = document.createElement(part.tag);
+        part.list.forEach(child => {
+          const li = document.createElement('li');
+          li.textContent = child;
+          elem.appendChild(li);
+        });
+        break;
+      case 'ol':
+        elem = document.createElement(part.tag);
+        part.list.forEach(child => {
+          const li = document.createElement('li');
+          li.textContent = child;
+          elem.appendChild(li);
+        });
+        break;
+      case 'img':
+        // 背景画像ありのdivにする
+        elem = document.createElement('div');
+        elem.style.setProperty('background-image', 'url(' + part.src + ')');
+        elem.style.setProperty('display', 'none', '');
+        // 背景画像用のクラス、ロード時の監視対象クラスを付与
+        elem.classList.add('has-bg-img', 'toBeMonitored');
+        elem.src = '';
+        break;
+      case 'div':
+        elem = document.createElement(part.tag);
+        // 背景画像ありの場合
+        if (this.hasProperty(part.styles, 'background-image')) {
+          // 背景画像用のクラス、ロード時の監視対象のクラスを付与
+          elem.classList.add('has-bg-img', 'toBeMonitored');
+          elem.style.setProperty('display', 'none', '');
+        }
+        // textContentを挿入
+        if (part.textContent) elem.insertAdjacentHTML('beforeend', part.textContent);
+        break;
+      default:
+        elem = document.createElement(part.tag);
+        if (part.textContent) elem.insertAdjacentHTML('beforeend', part.textContent);
+        break;
+    }
+    return elem;
+  }
+
+  /**
+   * JsonデータからHTMLエレメントを生成する
+   * @param {HTMLElement} page
+   */
+  setFirstContent(page) {
+    this.screen.appendChild(page);
+    this.hideLoader();
   }
 
   /**
@@ -156,6 +309,7 @@ export default class Slider {
       this.screen.textContent = null;
       this.screen.appendChild(this.contents[showTarget]);
       this.changeScreenStyle();
+      this.hideLoader();
     });
   }
 
@@ -178,6 +332,7 @@ export default class Slider {
         this.screen.textContent = null;
         this.screen.appendChild(this.contents[this.current]);
         this.changeScreenStyle();
+        this.hideLoader();
       } else {
         return false;
       }
@@ -203,6 +358,7 @@ export default class Slider {
         this.screen.textContent = null;
         this.screen.appendChild(this.contents[this.current]);
         this.changeScreenStyle();
+        this.hideLoader();
       } else {
         return false;
       }
@@ -297,5 +453,63 @@ export default class Slider {
       },
       { passive: true }
     );
+  }
+
+  /**
+   * スライダーの左右キー押下に応じたイベントを付与する
+   */
+  addEventArrowKeyDown() {
+    document.addEventListener('keydown', event => {
+      if (event.key === 'ArrowRight') {
+        this.next.click();
+      } else if (event.key === 'ArrowLeft') {
+        this.prev.click();
+      }
+    });
+  }
+
+  /**
+   * ローダーを付与する
+   * @return {HTMLElement}
+   */
+  createLoader() {
+    let elem = document.createElement('div');
+    elem.classList.add('slide-show_preLoading');
+    elem.style.setProperty('display', 'block', '');
+    elem.insertAdjacentHTML('beforeend', 'Loading...');
+    return elem;
+  }
+
+  /**
+   * 背景画像読み込み完了時に読み込み中アニメーションを非表示(個別画像用)
+   */
+  hideLoader() {
+    const bgPhotos = this.screen.querySelectorAll('.toBeMonitored');
+    bgPhotos.forEach(bgPhoto => {
+      let url = bgPhoto.style.getPropertyValue('background-image');
+      if (url !== '') {
+        url = url.replace(/^url\("(.+?)"\)/, '$1').replace(/(.+?)$/, '$1');
+      }
+      const img = document.createElement('img');
+      img.src = url;
+      img.width = img.height = 1;
+      img.onload = () => {
+        img.remove();
+        // .slide-show_preLoadingで隠れていた要素
+        const nextElem = bgPhoto.previousElementSibling;
+        nextElem.style.display = 'none';
+        bgPhoto.style.display = '';
+      };
+    });
+  }
+
+  /**
+   * プロパティの存在チェック
+   * @param {obj} obj
+   * @param {str} key
+   * @return {bool}
+   */
+  hasProperty(obj, key) {
+    return !!obj && Object.prototype.hasOwnProperty.call(obj, key);
   }
 }
