@@ -216,11 +216,12 @@ h3 {
   outline: none;
 }
 
-@media screen and (-ms-high-contrast: active), screen and (-ms-high-contrast: none) {
-  .contents-box summary {
-    display: none;
-  }
+/* IE */
+_:-ms-lang(x)::-ms-backdrop,
+.contents-box summary {
+  display: none;
 }
+
 /* iPadまで */
 @media screen and (min-width: 601px) and (max-width: 767px) {
   .contents-box {
