@@ -1,6 +1,5 @@
 const path = require('path');
 const src = path.resolve(__dirname, 'src');
-const dist = path.resolve(__dirname, 'dist');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 // const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
@@ -8,8 +7,8 @@ module.exports = {
     index: src + '/js/index.js',
   },
   output: {
-    path: path.resolve(dist, 'js'),
-    filename: '[name].js',
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'js/[name].js',
   },
   watch: true,
   module: {
@@ -31,7 +30,7 @@ module.exports = {
                     },
                     useBuiltIns: 'usage',
                     corejs: 3,
-                    modules: 'false',
+                    modules: 'auto',
                   },
                 ],
               ],
@@ -40,11 +39,53 @@ module.exports = {
         ],
       },
       {
-        test: /\.css$/,
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: 'css-loader',
-        }),
+        test: /\.css/,
+        use: [
+          {
+            options: {
+              publicPath: '[name].css',
+            },
+          },
+          // CSSを読み込む
+          'css-loader',
+        ],
+      },
+      // Sassファイルの読み込みとコンパイル
+      {
+        // 拡張子がsassとscssのファイルを対象とする
+        test: /\.s[ac]ss$/i,
+        use: [
+          // linkタグに出力する機能
+          'style-loader',
+          // CSSをバンドルするための機能
+          {
+            loader: 'css-loader',
+          },
+          // Sassをバンドルするための機能
+          {
+            loader: 'sass-loader',
+          },
+        ],
+      },
+      {
+        // 対象となるファイルの拡張子
+        test: /\.(gif|png|jpg|eot|wof|woff|ttf|svg|webp)$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: '[name].[ext]',
+              outputPath: (url, resourcePath) => {
+                // 処理するファイルの絶対パスに「img」にマッチする文字列があるか判定
+                if (/img/.test(resourcePath)) {
+                  return `img/${url}`;
+                } else {
+                  return `webfonts/${url}`;
+                }
+              },
+            },
+          },
+        ],
       },
     ],
   },
@@ -60,4 +101,6 @@ module.exports = {
     extensions: ['.js', '.css'],
   },
   externals: [],
+  // ES5(IE11等)向けの指定（webpack 5以上で必要）
+  target: ['web', 'es5'],
 };

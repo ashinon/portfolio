@@ -1,5 +1,6 @@
 import Slider from './slider.js';
 import SlideContents from './self-introduction.json';
+import '../sass/style.scss';
 
 /**
  * ポートフォリオ画面の表示・イベントのクラス
