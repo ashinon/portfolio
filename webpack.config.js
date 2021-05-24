@@ -39,11 +39,53 @@ module.exports = {
         ],
       },
       {
-        test: /\.css$/,
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: 'css-loader',
-        }),
+        test: /\.css/,
+        use: [
+          {
+            options: {
+              publicPath: '[name].css',
+            },
+          },
+          // CSSを読み込む
+          'css-loader',
+        ],
+      },
+      // Sassファイルの読み込みとコンパイル
+      {
+        // 拡張子がsassとscssのファイルを対象とする
+        test: /\.s[ac]ss$/i,
+        use: [
+          // linkタグに出力する機能
+          'style-loader',
+          // CSSをバンドルするための機能
+          {
+            loader: 'css-loader',
+          },
+          // Sassをバンドルするための機能
+          {
+            loader: 'sass-loader',
+          },
+        ],
+      },
+      {
+        // 対象となるファイルの拡張子
+        test: /\.(gif|png|jpg|eot|wof|woff|ttf|svg|webp)$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: '[name].[ext]',
+              outputPath: (url, resourcePath) => {
+                // 処理するファイルの絶対パスに「img」にマッチする文字列があるか判定
+                if (/img/.test(resourcePath)) {
+                  return `img/${url}`;
+                } else {
+                  return `webfonts/${url}`;
+                }
+              },
+            },
+          },
+        ],
       },
     ],
   },
