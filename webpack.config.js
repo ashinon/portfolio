@@ -1,6 +1,5 @@
 const path = require('path');
 const src = path.resolve(__dirname, 'src');
-const dist = path.resolve(__dirname, 'dist');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 // const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
@@ -8,8 +7,8 @@ module.exports = {
     index: src + '/js/index.js',
   },
   output: {
-    path: path.resolve(dist, 'js'),
-    filename: '[name].js',
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'js/[name].js',
   },
   watch: true,
   module: {
@@ -31,7 +30,7 @@ module.exports = {
                     },
                     useBuiltIns: 'usage',
                     corejs: 3,
-                    modules: 'false',
+                    modules: 'auto',
                   },
                 ],
               ],
@@ -60,4 +59,6 @@ module.exports = {
     extensions: ['.js', '.css'],
   },
   externals: [],
+  // ES5(IE11等)向けの指定（webpack 5以上で必要）
+  target: ['web', 'es5'],
 };
