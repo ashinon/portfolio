@@ -1,10 +1,10 @@
 const path = require('path');
 const src = path.resolve(__dirname, 'src');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+// const ExtractTextPlugin = require('extract-text-webpack-plugin');
 // const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
   entry: {
-    index: src + '/js/index.js',
+    index: src + '/js/index.ts',
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -14,7 +14,12 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.ts$/,            // 拡張子 .ts のファイルを
+        use: 'ts-loader',         // ts-loaderでトランスパイルする
+        exclude: /node_modules/,  // ただし外部ライブラリは除く
+      },
+      {
+        test: /\.js$/,            // jsはbabelでコンパイル
         exclude: /(node_modules)/,
         use: [
           {
@@ -98,7 +103,7 @@ module.exports = {
   ],
   resolve: {
     modules: [path.resolve(__dirname, 'src'), 'node_modules'],
-    extensions: ['.js', '.css'],
+    extensions: ['.js', '.ts', '.css'],
   },
   externals: [],
   // ES5(IE11等)向けの指定（webpack 5以上で必要）

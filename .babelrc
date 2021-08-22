@@ -9,8 +9,15 @@
         },
         "useBuiltIns": "usage",
         "corejs": 3,
-        "modules": "false"
-      }
+        "modules": "auto"
+      },
+      "@babel/preset-typescript"
     ]
-  ]
+  ],
+  "plugins": [
+      // preset-envには含まれていないTypeScriptの文法が使えるようになる
+      // preset-envに含まれる日が来たらこれらは不要になる
+      "@babel/proposal-class-properties",
+      "@babel/proposal-object-rest-spread"
+    ]
 }
