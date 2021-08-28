@@ -10,8 +10,13 @@
         "useBuiltIns": "usage",
         "corejs": 3,
         "modules": "auto"
-      },
-      "@babel/preset-typescript"
+      }
+    ],
+    [
+      "@babel/preset-typescript",
+      {
+        "allowNamespaces": true
+      }
     ]
   ],
   "plugins": [

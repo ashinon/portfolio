@@ -1,9 +1,17 @@
 {
   "compilerOptions": {
-    "target": "esnext",
+   "outDir": "dist",
+   "target": "esnext",
+   "baseUrl":".",
     "moduleResolution": "node" /* 相対パスではないモジュールは node_modules 配下を検索する */,
-    /* トランスパイルは Babelが行うのでtscコマンドでJavaScriptファイルを出力しないようにする */
+    /* ts cコマンドでトランスパイルしたJavaScriptファイルを出力する */
     "noEmit": false,
+    /* JavaScriptで簡易的な型チェックを行う */
+    "checkJs": true,
+     /* JavaScriptのコンパイル */
+    "allowJs": true,
+    /* 外部ファイルの読み込み */
+    "allowSyntheticDefaultImports": true,
     /* 厳格な型チェックオプション（noImplicitAny、noImplicitThis、alwaysStrict、
        strictBindCallApply、strictNullChecks、strictFunctionTypes、
        strictPropertyInitialization）を有効化する */
@@ -13,13 +21,13 @@
        このオプションを有効にすれば、Babel でトランスパイルできない TypeScriptの構文を検出して警告を出す */
     "isolatedModules": true,
     /* ES modules 形式以外の、CommonJS 形式などのモジュールを default import 形式で読み込める
-       例）const module = require('module') -> import module from 'module' */
+       例）const module = require('module') ->  import module from 'module' */
     "esModuleInterop": true,
-
     /* JSONファイルから型の抽出・生成が出来るようになる */
     "resolveJsonModule": true,
     /* nullとundefinedを独立した型として扱い、他の型には代入させない */
     "strictNullChecks": true
   },
   "include": ["src/**/*"],
+//  "lib": ["dom", "es2015"],
 }
