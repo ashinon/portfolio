@@ -1,8 +1,35 @@
+interface Slider {
+  new (target: HTMLElement, slideContents: any[], ms: Number, loopLimit: Number, dispTileList: boolean): SliderImpl;
+}
+
 /**
  * スライダークラス
  */
-export default class Slider {
-  /**
+export default class SliderImpl {
+  target: HTMLElement = <HTMLElement>document.createElement('div');
+  slideContents: any[] = [];
+  ms: number = 4500;
+  loopLimit: number = 1;
+  playSpeed : number = 5000;
+  limit : number = 1;
+  dispTitleList : boolean = false;
+  screen : HTMLElement;
+  prev : HTMLElement;
+  next : HTMLElement;
+  slideNaviList : HTMLElement;
+  contentIdPrefix : string = 'slideContents_';
+  clickBtn : boolean = true;                   // スライダーの左右の矢印を押下したフラグ
+  current : number = 0;                        // 現在のスライド
+  allSlideCount : number = 0;                  // スライドの総数
+  playCount : number = 0;                      // オートプレイのカウント
+  contents : HTMLElement[] = [];               // jsonからhtmlに変換後のslideContents
+  listIdPrefix: string = 'slideLbl_';
+  intarval: number = 0;
+  touchStartX: number = 0;
+  touchMoveX: number = 0;
+  swipeDist: number = 30;
+
+/**
    * constructor
    * @param {HTMLElement} target
    * @param {object} slideContents
@@ -10,34 +37,27 @@ export default class Slider {
    * @param {number} loopLimit
    * @param {boolean} dispTileList
    */
-  constructor(target, slideContents, ms = 4500, loopLimit = 1, dispTileList = false) {
+  constructor(target: HTMLElement, slideContents: any[], ms: number, loopLimit: number, dispTileList: boolean) {
     this.target = target;
     this.playSpeed = ms;
     this.limit = loopLimit;
     this.dispTitleList = dispTileList;
-    this.screen = this.target.querySelector('.slideScreen');
-    this.prev = this.target.querySelector('.slidePrev');
-    this.next = this.target.querySelector('.slideNext');
-    this.slideNaviList = this.target.querySelector('.slideNaviList');
-    this.contentIdPrefix = 'slideContents_';
-    this.clickBtn = true;
-    this.current = 0; // 現在のスライド
-    this.allSlideCount = 0; // スライドの総数
-    this.playCount = 0; // オートプレイのカウント
-    this.contents = []; // jsonからhtmlに変換後のslideContents
-    this.imgDatas = {}; // NaturalSize等画像の詳細を格納
-    this.setSlider(slideContents).catch(error => console.error(error.message));
+    this.screen = this.target.querySelector('.slideScreen')!;
+    this.prev = this.target.querySelector('.slidePrev')!;
+    this.next = this.target.querySelector('.slideNext')!;
+    this.slideNaviList = this.target.querySelector('.slideNaviList')!;
+    this.setSlider(slideContents).catch((error) => console.error(error.message));
   }
 
   /**
    * スライダーを作る
    * @param {obj} slideContents
    */
-  async setSlider(slideContents) {
+  async setSlider(slideContents: any[]) {
     this.maskSlideScreen();
     await this.onceLoadImg(slideContents);
     await this.convertToElem(slideContents);
-    this.hideScreenLoader(slideContents);
+    this.hideScreenLoader();
     this.setFirstContent(this.contents[0]);
     this.setPrevsEvent();
     this.setNextsEvent();
@@ -62,17 +82,17 @@ export default class Slider {
    * 読み込み中表示を解除
    */
   hideScreenLoader() {
-    const target = this.screen.querySelector('.box-for-loading');
+    let target = this.screen.querySelector<HTMLElement>('.box-for-loading')!;
     target.style.display = 'none';
   }
 
   /**
    * 全ページの画像を全て一度読み込む
-   * @param {json} json
+   * @param {any[]} json
    */
-  onceLoadImg(json) {
+  onceLoadImg(json: any[]) {
     const pathList = this.getImgPathList(JSON.parse(JSON.stringify(json)));
-    pathList.forEach(path => {
+    pathList.forEach((path) => {
       const img = document.createElement('img');
       img.src = path;
       img.addEventListener(
@@ -87,13 +107,13 @@ export default class Slider {
 
   /**
    * json内の画像パスを全て取得する
-   * @param {json} json
+   * @param {any[]} json
    * @return {array}
    */
-  getImgPathList(json) {
-    const pathList = [];
-    json.forEach(page => {
-      page.contents.forEach(part => {
+  getImgPathList(json: any[]): string[] {
+    const pathList: string[] = [];
+    json.forEach((page) => {
+      page.contents.forEach((part : { [key: string]: any }) => {
         if (part.styles) {
           if (Object.keys(part.styles).includes('background-image')) {
             let path = part.styles['background-image'];
@@ -109,9 +129,9 @@ export default class Slider {
 
   /**
    * JsonデータからHTMLエレメントを生成する
-   * @param {array} json
+   * @param {any[]} json
    */
-  convertToElem(json) {
+  convertToElem(json: any[]) {
     // タイトルリスト部分のスタイルを設定する
     if (this.dispTitleList) {
       this.slideNaviList.classList.add('titleList');
@@ -125,25 +145,25 @@ export default class Slider {
 
       // コンテンツ表示部分(外側)を作る
       let contentsBox = document.createElement('div');
-      contentsBox.setAttribute('id', this.contentIdPrefix + i);
+      contentsBox.setAttribute('id', this.contentIdPrefix + String(i));
       contentsBox.classList.add('slide-contents-box');
 
       // コンテンツ表示部分(内側)を作る
       const contents = document.createElement('div');
       contents.classList.add('slide-contents');
       if (page.styles) {
-        Object.keys(page.styles).forEach(styleName => {
+        Object.keys(page.styles).forEach((styleName) => {
           contents.style.setProperty(styleName, page.styles[styleName], '');
         });
       }
       if (page.classes) {
-        page.classes.forEach(child => {
+        page.classes.forEach((child : string) => {
           contents.classList.add(child);
         });
       }
 
       // コンテンツを作る
-      page.contents.forEach(part => {
+      page.contents.forEach((part : { [key: string]: any }) => {
         let elem = this.buildElems(part);
 
         // 画像表示用の要素の場合
@@ -172,13 +192,12 @@ export default class Slider {
 
   /**
    * スライドのタイトルリストを作る
-   * @param {str} page
-   * @param {num} idx
-   * @return {obj}
+   * @param {{ [key: string]: any }} page
+   * @param {Number} idx
+   * @return {HTMLLIElement}
    */
-  createNaviElem(page, idx) {
-    const list = document.createElement('li');
-    this.listIdPrefix = 'slideLbl_';
+  createNaviElem(page: { [key: string]: any }, idx: Number): HTMLLIElement {
+    const list : HTMLLIElement = document.createElement('li');
     list.setAttribute('id', this.listIdPrefix + idx);
     if (!idx) {
       list.classList.add('selected');
@@ -192,23 +211,23 @@ export default class Slider {
 
   /**
    * スライダーメインコンテンツを作る
-   * @param {obj} part
+   * @param {{ [key: string]: any }} part
    * @return {HTMLElement}
    */
-  buildElems(part) {
+  buildElems(part: { [key: string]: any }): HTMLElement {
     if (!part.tag) {
       throw new Error('タグが指定されていません');
     }
     let elem = this.createTag(part);
     // スタイルを付与する
     if (this.hasProperty(part, 'styles')) {
-      Object.keys(part.styles).forEach(styleName => {
+      Object.keys(part.styles).forEach((styleName) => {
         elem.style.setProperty(styleName, part.styles[styleName], '');
       });
     }
     // クラスを付与する
     if (this.hasProperty(part, 'classes')) {
-      part.classes.forEach(child => {
+      part.classes.forEach((child : string) => {
         elem.classList.add(child);
       });
     }
@@ -220,13 +239,13 @@ export default class Slider {
    * @param {obj} part
    * @return {HTMLElement}
    */
-  createTag(part) {
+  createTag(part: { [key: string]: any }): HTMLElement {
     // tagで指定された要素を作る
-    let elem;
+    let elem : HTMLElement;
     switch (part.tag) {
       case 'dl':
         elem = document.createElement(part.tag);
-        part.list.forEach(child => {
+        part.list.forEach((child : { [key: string]: any }) => {
           const div = document.createElement('div');
           const dt = document.createElement('dt');
           const dd = document.createElement('dd');
@@ -239,7 +258,7 @@ export default class Slider {
         break;
       case 'ul':
         elem = document.createElement(part.tag);
-        part.list.forEach(child => {
+        part.list.forEach((child : string) => {
           const li = document.createElement('li');
           li.textContent = child;
           elem.appendChild(li);
@@ -247,7 +266,7 @@ export default class Slider {
         break;
       case 'ol':
         elem = document.createElement(part.tag);
-        part.list.forEach(child => {
+        part.list.forEach((child : string) => {
           const li = document.createElement('li');
           li.textContent = child;
           elem.appendChild(li);
@@ -260,7 +279,6 @@ export default class Slider {
         elem.style.setProperty('display', 'none', '');
         // 背景画像用のクラス、ロード時の監視対象クラスを付与
         elem.classList.add('has-bg-img', 'toBeMonitored');
-        elem.src = '';
         break;
       case 'div':
         elem = document.createElement(part.tag);
@@ -285,19 +303,19 @@ export default class Slider {
    * JsonデータからHTMLエレメントを生成する
    * @param {HTMLElement} page
    */
-  setFirstContent(page) {
+  setFirstContent(page: HTMLElement) {
     this.screen.appendChild(page);
     this.hideLoader();
   }
 
   /**
    * list押下時のイベントをセット
-   * @param {object} list
+   * @param {HTMLLIElement} list
    * @param {number} length
    * @param {number} showTarget
    * @param {number} hideTarget
    */
-  setListClickEvent(list, showTarget) {
+  setListClickEvent(list: HTMLLIElement, showTarget: number) {
     list.addEventListener('click', () => {
       for (let j = 0; j < this.slideNaviList.children.length; j++) {
         this.slideNaviList.children[j].classList.remove('selected');
@@ -370,7 +388,7 @@ export default class Slider {
    */
   setScreenStyleBefore() {
     this.clickBtn = true;
-    this.screen.style.opacity = 0.2;
+    this.screen.style.opacity = '0.2';
     this.screen.style.transitionDuration = '';
   }
 
@@ -379,8 +397,8 @@ export default class Slider {
    */
   changeScreenStyle() {
     setTimeout(() => {
-      this.screen.style.opacity = 1;
-      this.screen.style.transitionDuration = 700 + 'ms';
+      this.screen.style.opacity = '1';
+      this.screen.style.transitionDuration = '700ms';
       this.clickBtn = true;
     }, 20);
   }
@@ -390,7 +408,7 @@ export default class Slider {
    */
   autoPlay() {
     if (this.limit > 0) {
-      this.intarval = setInterval(() => {
+      this.intarval = window.setInterval(() => {
         this.next.click();
         this.playCount++;
         if (this.limit * this.allSlideCount <= this.playCount) {
@@ -406,14 +424,14 @@ export default class Slider {
   addEventTouch() {
     this.screen.addEventListener(
       'touchstart',
-      event => {
+      (event) => {
         this.touchStartX = event.changedTouches[0].pageX;
       },
       { passive: true }
     );
     this.screen.addEventListener(
       'touchmove',
-      event => {
+      (event) => {
         this.touchMoveX = event.changedTouches[0].pageX;
       },
       { passive: true }
@@ -459,7 +477,7 @@ export default class Slider {
    * スライダーの左右キー押下に応じたイベントを付与する
    */
   addEventArrowKeyDown() {
-    document.addEventListener('keydown', event => {
+    document.addEventListener('keydown', (event) => {
       if (event.key === 'ArrowRight') {
         this.next.click();
       } else if (event.key === 'ArrowLeft') {
@@ -472,7 +490,7 @@ export default class Slider {
    * ローダーを付与する
    * @return {HTMLElement}
    */
-  createLoader() {
+  createLoader(): HTMLElement {
     let elem = document.createElement('div');
     elem.classList.add('slide-show_preLoading');
     elem.style.setProperty('display', 'block', '');
@@ -485,7 +503,7 @@ export default class Slider {
    */
   hideLoader() {
     const bgPhotos = this.screen.querySelectorAll('.toBeMonitored');
-    bgPhotos.forEach(bgPhoto => {
+    bgPhotos.forEach((bgPhoto : any) => {
       let url = bgPhoto.style.getPropertyValue('background-image');
       if (url !== '') {
         url = url.replace(/^url\("(.+?)"\)/, '$1').replace(/(.+?)$/, '$1');
@@ -496,7 +514,7 @@ export default class Slider {
       img.onload = () => {
         img.remove();
         // .slide-show_preLoadingで隠れていた要素
-        const nextElem = bgPhoto.previousElementSibling;
+        const nextElem = bgPhoto.previousElementSibling!;
         nextElem.style.display = 'none';
         bgPhoto.style.display = '';
       };
@@ -509,7 +527,7 @@ export default class Slider {
    * @param {str} key
    * @return {bool}
    */
-  hasProperty(obj, key) {
+  hasProperty(obj: { [key: string]: any }, key: string): boolean {
     return !!obj && Object.prototype.hasOwnProperty.call(obj, key);
   }
 }

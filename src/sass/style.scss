@@ -91,6 +91,38 @@ p {
 }
 
 /****************************************
+  背景色変化用
+****************************************/
+.transition-duration-touch-device {
+  transition-duration : 800ms;
+}
+
+.transition-duration-pc-device {
+  transition-duration : 1200ms;
+}
+
+.bg-blue {
+  background-color: rgba(176, 196, 222, 0.5);
+}
+
+.bg-yellow {
+  background-color: rgba(236, 225, 145, 0.3);
+}
+
+.bg-pink {
+  background-color: rgba(255, 182, 193, 0.3);
+}
+
+.bg-purple {
+  background-color: rgba(187, 161, 212, 0.3);
+}
+
+.bg-green {
+  background-color: rgba(145, 236, 186, 0.3);
+}
+
+
+/****************************************
   section
 ****************************************/
 .section {
@@ -316,6 +348,7 @@ h1 {
     padding: 20px 20px;
     position: static;
     z-index: -1;
+    font-size: 1.25rem;
   }
 }
 
@@ -566,9 +599,6 @@ _:-ms-lang(x),
     }
     th {
       border-top: none;
-    }
-    td {
-      vertical-align: baseline;
     }
   }
   .rating {
@@ -868,3 +898,4 @@ _:-ms-lang(x),
 .slide-contents li {
   min-width: calc(50% - 2.5em);
 }
+
