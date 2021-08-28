@@ -348,6 +348,7 @@ h1 {
     padding: 20px 20px;
     position: static;
     z-index: -1;
+    font-size: 1.25rem;
   }
 }
 
@@ -598,9 +599,6 @@ _:-ms-lang(x),
     }
     th {
       border-top: none;
-    }
-    td {
-      vertical-align: baseline;
     }
   }
   .rating {
