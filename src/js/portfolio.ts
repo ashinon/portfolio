@@ -1,4 +1,4 @@
-import Slider from './slider.js';
+import Slider from './slider';
 import SlideContents from './self-introduction.json';
 import '../sass/style.scss';
 
@@ -6,23 +6,42 @@ import '../sass/style.scss';
  * ポートフォリオ画面の表示・イベントのクラス
  */
 export default class Portfolio {
+  transitionSpeed: number = 0;
+  boundaries: number[] = [];
+  scrollTopLast: number = 0;
+  //カラー設定の配列
+  bgColorClassList = [
+    'bg-blue',
+    'bg-yellow',
+    'bg-pink',
+    'bg-purple',
+    'bg-green',
+  ];
+  transitionDurationClassList = {
+    pc: 'transition-duration-pc-device',
+    mobile: 'transition-duration-touch-device'
+  };
+  touchDevice: boolean = false;
+  bodyElement: HTMLElement;
+  wrapper: HTMLElement;
+  sections: NodeList;
+  introduction: HTMLElement;
+  nav: HTMLElement;
+  slider: any;
+
   constructor() {
-    this.anime;
     this.boundaries;
-    this.transitionSpeed;
-    this.scrollTopPrev = 0; // 再読み込み前のスクロール位置
     this.scrollTopLast = 0; // 1つ前のスクロール位置(スクロール方向判定用)
     this.touchDevice = this.isTouchDevice();
-    this.allSelector = document.querySelector('body');
-    this.wrapper = this.allSelector.querySelector('#wrapper');
-    this.sections = this.allSelector.querySelectorAll('div.section');
-    this.introduction = this.allSelector.querySelector('#introduction');
-    this.nav = this.allSelector.querySelector('#globalNavi');
-    this.setTransitionSpeed();
+    this.bodyElement = document.querySelector('body')!;
+    this.wrapper = this.bodyElement.querySelector('#wrapper')!;
+    this.sections = this.bodyElement.querySelectorAll('div.section');
+    this.introduction = this.bodyElement.querySelector('#introduction')!;
+    this.nav = this.bodyElement.querySelector('#globalNavi')!;
     this.getBoundaries();
-    this.setBG(0);
+    this.setBG();
     this.addEvents();
-    this.setSliderProp(this.allSelector.querySelector('#profile'));
+    this.setSliderProp(this.bodyElement!.querySelector('#profile'));
     this.hideLoadingAnime();
   }
 
@@ -30,18 +49,20 @@ export default class Portfolio {
    * トップの背景画像読み込み完了時に読み込み中アニメーションを非表示
    */
   hideLoadingAnime() {
-    const bgPhoto = document.getElementById('bg-photo');
+    const bgPhoto: HTMLElement = document.getElementById('bg-photo')!;
     const imgPass = 'dist/img/';
-    let url =
-      bgPhoto.style['background-image'] || window.getComputedStyle(bgPhoto, '')['background-image'];
+    let url: string =
+      bgPhoto.style[<any>'background-image'] ||
+      window.getComputedStyle(bgPhoto, '')[<any>'background-image'];
     url = url.replace(/^url.+?img\/([^/]+?)"\)/, '$1').replace(/(.+?)$/, imgPass + '$1');
     const img = document.createElement('img');
     img.src = url;
     img.width = img.height = 1;
     this.wrapper.appendChild(img);
     img.onload = () => {
-      document.getElementById('preLoading').style.display = 'none';
-      this.wrapper.removeChild(img);
+      const preLoading: HTMLElement = document.getElementById('preLoading')!;
+      preLoading.style.display = 'none';
+      this.wrapper!.removeChild(img);
     };
   }
 
@@ -50,7 +71,7 @@ export default class Portfolio {
    * @param {obj} target スライダーを表示するエレメント
    * @param {number} ms オートプレイのスピード
    */
-  setSliderProp(target) {
+  setSliderProp(target: any) {
     const ms = 5000;
     const dispTileList = false;
     const loopLimit = 1;
@@ -58,23 +79,13 @@ export default class Portfolio {
   }
 
   /**
-   * 背景色変化のアニメーションの速度をセットする
-   */
-  setTransitionSpeed() {
-    if (this.touchDevice) {
-      this.transitionSpeed = '800';
-    } else {
-      this.transitionSpeed = '1200';
-    }
-  }
-
-  /**
    * 各要素の背景色が変わる境界位置を求める
    */
   getBoundaries() {
     this.boundaries = [];
-    this.sections.forEach((elem, i) => {
-      const rect = elem.getBoundingClientRect();
+    this.sections.forEach((elem : Node, i: number) => {
+      const tmpElem = elem as HTMLElement;
+      const rect : { [key: string]: any } = tmpElem.getBoundingClientRect();
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
       const elemsTop = rect.top + scrollTop;
       // 最上部は0にする
@@ -96,25 +107,21 @@ export default class Portfolio {
   /**
    * 背景変更メソッドに渡すプロパティをセット、実行
    * @param {number} speed 変化速度
-   * @param {number} y 現在のスクロール位置
    */
-  setBG(speed, y) {
-    const scrollTop = this.scrollTopPrev || this.getScrollTop(y);
-    this.scrollTopPrev = 0;
+  setBG() {
+    const scrollTop = this.getScrollTop();
     for (let i = this.boundaries.length - 1; i >= 0; i--) {
       if (scrollTop >= this.boundaries[i]) {
-        this.chengeBG(i, speed);
+        this.chengeBG(i);
         break;
       }
     }
   }
 
   /**
-   * ナビゲーションにfixedクラスを付与
-   * @param {number} y 現在のスクロール位置
-   */
-  setFixedClass(y) {
-    const scrollTop = this.getScrollTop(y);
+   * ナビゲーションにfixedクラスを付与   */
+  setFixedClass() {
+    const scrollTop = this.getScrollTop();
     const underNaviHeight = this.introduction.getBoundingClientRect().height;
     const adjuster = this.touchDevice ? -15 : -15;
     if (scrollTop < this.boundaries[1] - underNaviHeight + adjuster) {
@@ -141,76 +148,39 @@ export default class Portfolio {
    * @param {number} param
    * @return {number} scrollTop
    */
-  getScrollTop(param) {
-    let scrollTop;
-    if (param !== undefined) {
-      // 呼び出し元でスクロール位置の指定がある場合
-      scrollTop = param;
-    } else {
-      // どちらでもない場合
-      scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    }
+  getScrollTop() {
+    let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
     return scrollTop;
   }
 
   /**
    * 背景色を変更する
    * @param {number} secNum
-   * @param {number} speed
    */
-  chengeBG(secNum, speed = this.transitionSpeed) {
+  chengeBG(secNum: number) {
     //現在の番号
     let current = -1;
-    //カラー設定の配列
-    let bgColor = [
-      'rgba(176, 196, 222, 0.5)', // 水色
-      'rgba(236, 225, 145, 0.3)', // 黄色
-      'rgba(255, 182, 193, 0.3)', // ピンク
-      'rgba(187, 161, 212, 0.3)', // 紫
-      'rgba(145, 236, 186, 0.3)', // 緑
-    ];
     if (secNum != current) {
       current = secNum;
-      this.stopAnimation(this.anime);
-      this.startAnimation(this.allSelector, { backgroundColor: bgColor[current] }, 200, speed);
-    }
-  }
-
-  /**
-   * .animate()の代用
-   * @param {obj} elem
-   * @param {obj} option
-   * @param {number} time
-   * @param {number} speed
-   */
-  startAnimation(elem, option, time, speed) {
-    const begin = new Date() - 0;
-    this.anime = setInterval(() => {
-      let current = new Date() - begin;
-      if (current > time) {
-        clearInterval(this.anime);
-        current = time;
+      let transitionDuration = this.transitionDurationClassList.pc;
+      if (this.touchDevice) {
+        // タッチデバイス
+        transitionDuration = this.transitionDurationClassList.mobile;
       }
-      Object.keys(option).forEach(optName => {
-        elem.style[optName] = option[optName];
-        elem.style.transitionDuration = speed + 'ms';
+      const allClassList: string[] = this.bgColorClassList.concat(Object.keys(this.transitionDurationClassList));
+      allClassList.forEach((className) => {
+        this.bodyElement.classList.remove(className);
       });
-    }, 10);
+      [this.bgColorClassList[current], transitionDuration].forEach((className) => {
+        this.bodyElement.classList.add(className);
+      });
   }
-
-  /**
-   * .stop()の代用
-   * @param {obj} anime
-   */
-  stopAnimation(anime) {
-    clearInterval(anime);
   }
 
   /**
    * イベント付与メソッドをまとめて実行
    */
   addEvents() {
-    this.addEventUnload();
     this.addEventScrolle();
     this.addEventResize();
     this.addEventArrowKeyDown();
@@ -223,9 +193,9 @@ export default class Portfolio {
     window.addEventListener(
       'scroll',
       () => {
-        this.setBG(this.transitionSpeed);
-        this.setFixedClass();
         this.scrollTopLast = this.getScrollTop();
+        this.setBG();
+        this.setFixedClass();
       },
       { passive: true }
     );
@@ -238,7 +208,7 @@ export default class Portfolio {
   addEventResize() {
     window.addEventListener('resize', () => {
       this.getBoundaries();
-      this.setBG(this.transitionSpeed);
+      this.setBG();
       this.setFixedClass();
     });
   }
@@ -247,7 +217,7 @@ export default class Portfolio {
    * スライダーの左右キー押下に応じたイベントを付与する
    */
   addEventArrowKeyDown() {
-    document.addEventListener('keydown', event => {
+    document.addEventListener('keydown', (event) => {
       const scrollTop = this.getScrollTop();
       if (scrollTop < this.boundaries[2]) {
         if (event.key === 'ArrowRight') {
@@ -257,46 +227,6 @@ export default class Portfolio {
         }
       }
     });
-  }
-
-  /**
-   * 再読み込みされた時のイベント処理
-   * スクロール位置を取得
-   */
-  addEventUnload() {
-    window.addEventListener(
-      'beforeunload',
-      () => {
-        if (this.hasLocalStorage()) {
-          window.localStorage.setItem('sectionalPosition', window.pageYOffset);
-        }
-      },
-      { once: true }
-    );
-    window.addEventListener(
-      'unload',
-      () => {
-        if (this.hasLocalStorage()) {
-          window.pageYOffset = window.localStorage.getItem('sectionalPosition');
-          this.scrollTopPrev = window.pageYOffset || document.documentElement.scrollTop;
-        }
-      },
-      { once: true }
-    );
-  }
-
-  /**
-   * ローカルストレージを使えるデバイスか否かの判定
-   */
-  hasLocalStorage() {
-    const checkKey = 'haslocalstorage';
-    try {
-      window.localStorage.setItem(checkKey, 1);
-      window.localStorage.getItem(checkKey);
-      return true;
-    } catch (e) {
-      return false;
-    }
   }
 
   /**

@@ -1,0 +1,11 @@
+{
+  "rules": {
+    "prettier": [
+      true,
+      {
+        "singleQuote": true,
+        "semi": true
+      }
+    ]
+  }
+}
