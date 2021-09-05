@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "lint": "eslint src/js",
     "dev": "webpack --mode development",
     "build": "webpack --mode production"
@@ -42,14 +42,17 @@
     "@babel/preset-typescript": "^7.15.0",
     "@babel/runtime-corejs2": "^7.14.6",
     "@fortawesome/fontawesome-free": "^5.15.3",
+    "@types/jest": "^27.0.1",
     "babel-jest": "^27.0.2",
     "babel-upgrade": "^1.0.1",
     "browserify": "^17.0.0",
     "core-js": "^3.16.2",
     "es6-promise": "^4.2.8",
     "file-loader": "^6.2.0",
+    "jest": "^27.1.0",
     "mini-css-extract-plugin": "^1.6.0",
     "regenerator-runtime": "^0.13.7",
+    "ts-jest": "^27.0.5",
     "tslint": "^6.1.3",
     "tslint-loader": "^3.5.4",
     "uniq": "^1.0.1"

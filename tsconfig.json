@@ -1,8 +1,11 @@
 {
   "compilerOptions": {
+   "paths": {
+     "#/*": ["*"]
+   },
+   "baseUrl":".",
    "outDir": "dist",
    "target": "esnext",
-   "baseUrl":".",
     "moduleResolution": "node" /* 相対パスではないモジュールは node_modules 配下を検索する */,
     /* ts cコマンドでトランスパイルしたJavaScriptファイルを出力する */
     "noEmit": false,
@@ -28,6 +31,5 @@
     /* nullとundefinedを独立した型として扱い、他の型には代入させない */
     "strictNullChecks": true
   },
-  "include": ["src/**/*"],
-//  "lib": ["dom", "es2015"],
+  "include": ["jest.config.js"],
 }

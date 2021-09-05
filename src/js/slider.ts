@@ -46,7 +46,7 @@ export default class SliderImpl {
     this.prev = this.target.querySelector('.slidePrev')!;
     this.next = this.target.querySelector('.slideNext')!;
     this.slideNaviList = this.target.querySelector('.slideNaviList')!;
-    this.setSlider(slideContents).catch((error) => console.error(error.message));
+    this.setSlider(slideContents).catch((error) => console.log(error.message));
   }
 
   /**
