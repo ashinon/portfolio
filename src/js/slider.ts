@@ -1,5 +1,5 @@
 interface Slider {
-  new (target: HTMLElement, slideContents: any[], ms: Number, loopLimit: Number, dispTileList: boolean): SliderImpl;
+  new (target: HTMLElement, slideContents: any[], ms?: Number, loopLimit?: Number, dispTileList?: boolean): SliderImpl;
 }
 
 /**
@@ -13,10 +13,10 @@ export default class SliderImpl {
   playSpeed : number = 5000;
   limit : number = 1;
   dispTitleList : boolean = false;
-  screen : HTMLElement;
-  prev : HTMLElement;
-  next : HTMLElement;
-  slideNaviList : HTMLElement;
+  screen : HTMLElement = <HTMLElement>document.createElement('div');
+  prev : HTMLElement = <HTMLElement>document.createElement('div');
+  next : HTMLElement = <HTMLElement>document.createElement('div');
+  slideNaviList : HTMLElement = <HTMLElement>document.createElement('div');
   contentIdPrefix : string = 'slideContents_';
   clickBtn : boolean = true;                   // スライダーの左右の矢印を押下したフラグ
   current : number = 0;                        // 現在のスライド
@@ -37,17 +37,21 @@ export default class SliderImpl {
    * @param {number} loopLimit
    * @param {boolean} dispTileList
    */
-  constructor(target: HTMLElement, slideContents: any[], ms: number, loopLimit: number, dispTileList: boolean) {
-    this.target = target;
-    this.playSpeed = ms;
-    this.limit = loopLimit;
-    this.dispTitleList = dispTileList;
-    this.screen = this.target.querySelector('.slideScreen')!;
-    this.prev = this.target.querySelector('.slidePrev')!;
-    this.next = this.target.querySelector('.slideNext')!;
-    this.slideNaviList = this.target.querySelector('.slideNaviList')!;
-    this.setSlider(slideContents).catch((error) => console.log(error.message));
-  }
+  constructor(target: HTMLElement, slideContents: any[], ms?: number, loopLimit?: number, dispTileList?: boolean) {
+    if(ms) this.playSpeed = ms;
+    if(loopLimit) this.limit = loopLimit;
+    if(dispTileList) this.dispTitleList = dispTileList;
+    if(target) {
+      this.target = target;
+      this.screen = this.target.querySelector('.slideScreen')!;
+      this.prev = this.target.querySelector('.slidePrev')!;
+      this.next = this.target.querySelector('.slideNext')!;
+      this.slideNaviList = this.target.querySelector('.slideNaviList')!;
+      if(this.screen && this.prev && this.next && this.slideNaviList) {
+        this.setSlider(slideContents).catch((error) => console.log(error.message));
+      }
+    }
+}
 
   /**
    * スライダーを作る

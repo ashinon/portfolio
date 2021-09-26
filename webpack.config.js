@@ -38,7 +38,6 @@ module.exports = [
         },
         // Sassファイルの読み込みとコンパイル
         {
-          // 拡張子がsassとscssのファイルを対象とする
           test: /\.s[ac]ss$/i,
           use: [
             // linkタグに出力する機能
@@ -46,7 +45,7 @@ module.exports = [
             // CSSをバンドルするための機能
             {
               loader: 'css-loader',
-          },
+            },
             // Sassをバンドルするための機能
             {
               loader: 'sass-loader',
