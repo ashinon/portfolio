@@ -6,9 +6,6 @@
  - スライダー
  - 追従ヘッダー
 
-実際の表示は以下より確認できます。  
-<https://ashinon.github.io/portfolio>
-
 ## Dependency
 
  - JavaScript(ES6)
