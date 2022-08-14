@@ -1,5 +1,6 @@
 import SliderImpl from './slider';
 import SlideContents from './self-introduction.json';
+import SkillsContents from './skills.json';
 import '../sass/style.scss';
 
 /**
@@ -41,6 +42,7 @@ export default class Portfolio {
     this.setBG();
     this.addEvents();
     this.setSliderProp(this.bodyElement.querySelector('#profile')!, SlideContents);
+    this.drawSkillsContents(this.bodyElement.querySelector('#skills')!, SkillsContents);
     this.hideLoadingAnime('#bg-photo', '#preLoading');
   }
 
@@ -77,6 +79,66 @@ export default class Portfolio {
     const dispTileList = false;
     const loopLimit = 1;
     this.slider = new SliderImpl(target, slideContents, ms, loopLimit, dispTileList);
+  }
+
+  /**
+   * Skillsエリアの描画
+   * @param {obj} target スライダーを表示するエレメント
+   * @param {number} ms オートプレイのスピード
+   */
+   drawSkillsContents(target: HTMLElement, contentsJson: any[]): void {
+    // tagで指定された要素を作る
+    // let elem : HTMLElement;
+    // elem.classList.add('has-bg-img', 'toBeMonitored');
+    contentsJson.forEach((content) => {
+      console.log('content', content);
+      const outerDiv: HTMLElement = document.createElement('div');
+      outerDiv.classList.add('contents-box');
+      const innerDiv: HTMLElement = document.createElement('div');
+      innerDiv.classList.add('contents-inner-area');
+      const h3: HTMLElement = document.createElement('h3');
+      const p: HTMLElement = document.createElement('p');
+      const table: HTMLElement = document.createElement('table');
+      table.classList.add('table');
+
+      // Theadを作る
+      const thead: HTMLElement = document.createElement('thead');
+      const theadTr: HTMLElement = document.createElement('tr');
+      for(let i = 0; i < content.thContets.length; i++) {
+        const th = document.createElement('th');
+        th.textContent = content.thContets[i];
+        theadTr.appendChild(th);
+      }
+      thead.appendChild(theadTr);
+
+      // Tbodyを作る
+      const tbody: HTMLElement = document.createElement('tbody');
+      for(let i = 0; i < content.tdContets.length; i++) {
+        const tbodyTr: HTMLElement = document.createElement('tr');
+        content.tdContets[i].forEach((tdContent: string) => {
+          const td = document.createElement('td');
+          td.insertAdjacentHTML('beforeend', tdContent);
+          tbodyTr.appendChild(td);
+        });
+        tbody.appendChild(tbodyTr);
+        // td.textContent = content.tdContets[i];
+      }
+
+      // theadとtbodyをtableに追加する
+      table.appendChild(thead);
+      table.appendChild(tbody);
+
+      // コンテンツを組み立てる
+      h3.textContent = content.h3;
+      innerDiv.appendChild(h3);
+      if (content.p) {
+        p.textContent = content.p;
+        innerDiv.appendChild(p);
+      }
+      innerDiv.appendChild(table);
+      outerDiv.appendChild(innerDiv);
+      target.appendChild(outerDiv);
+    });
   }
 
   /**
@@ -180,7 +242,7 @@ export default class Portfolio {
       [this.bgColorClassList[current], transitionDuration].forEach((className) => {
         this.bodyElement.classList.add(className);
       });
-  }
+    }
   }
 
   /**

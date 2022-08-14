@@ -13,7 +13,6 @@
     <link href="dist/css/reboot.css" rel="stylesheet" />
     <link href="dist/css/bootstrap.css" rel="stylesheet" />
     <link href="dist/css/slide-show.css" rel="stylesheet" />
-    <script src="dist/js/index.js"></script>
   </head>
   <body>
     <div id="wrapper" class="">
@@ -37,199 +36,28 @@
                 <a href="#home"><i class="fas fa-home"></i>HOME</a>
               </li>
               <li>
+                <a href="#profile"><i class="fa fa-address-card"></i>ABOUT</a>
+              </li>
+              <li>
                 <a href="#works"><i class="fa fa-file-code"></i>WORKS</a>
               </li>
               <li>
                 <a href="#skills"><i class="fas fa-tasks"></i>SKILLS</a>
-              </li>
-              <li>
-                <a href="#profile"><i class="fa fa-address-card"></i>PROFILE</a>
               </li>
             </ul>
           </nav>
         </div>
         <div id="introduction">
           <p>
-            こんにちは、芦野です。<br />
-            開発のお仕事をして4年目です。
-            大学までは音楽の勉強をしていて、ITとは無縁の生活をしていました。<br />
-            ある日ブログの仕組みに興味を持ってWebサイトを自作してみたところ、面白かったので、それをきっかけにHTMLコーダーのアルバイトを始めました。<br />
-            その後Webデザイナーを志望して、最終的に今はシステムエンジニアをしています。
+            こんにちは。エンジニアの芦野です。<br>
+            このサイトは私の事を知っていただくためのポートフォリオサイトです。<br>
+            どうぞごゆっくりご覧ください。<br>
           </p>
         </div>
       </div>
-      <!-- works -->
-      <div id="works" class="section">
-        <h2><i class="far fa-file-code"></i>WORKS</h2>
-        <!-- contents-box -->
-        <div class="contents-box">
-          <div class="contents-inner-area">
-            <div class="bg-work-img" id="img_portfolio"></div>
-            <figure></figure>
-            <h3>ポートフォリオ</h3>
-            <details>
-              <summary>詳しく見る</summary>
-              <a href="https://github.com/ashinon/portfolio">GitHub</a>
-              <p>今開いているサイトです。TypeScriptでフルスクラッチで作成しました。<br /></p>
-            </details>
-          </div>
-        </div>
-        <div class="contents-box">
-          <div class="contents-inner-area">
-            <figure>
-              <div class="bg-work-img" id="img_slideshow"></div>
-            </figure>
-            <h3>スライダー</h3>
-            <details>
-              <summary>詳しく見る</summary>
-              <a href="https://github.com/ashinon/slide-show">GitHub</a>
-              <p>依存ライブラリはなしで単一モジュールで動くように作りました。<br />JavaScriptで出来ています。</p>
-            </details>
-          </div>
-        </div>
-      </div>
-      <!-- SKILLS -->
-      <div id="skills" class="section">
-        <h2><i class="fas fa-tasks"></i>SKILLS</h2>
-        <div class="contents-box">
-          <div class="contents-inner-area">
-            <h3>フロントエンド</h3>
-            <p>
-              直近の案件は生のJavaScriptでの実装でした。<br />フレームワークやjQueryを使った実装も出来ます。
-            </p>
-            <table class="table">
-              <thead>
-                <tr>
-                  <th scope="col">技術</th>
-                  <th scope="col">経験</th>
-                  <th scope="col">スキル</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>JavaScript</td>
-                  <td>3年半</td>
-                  <td><span class="rating rate4"></span></td>
-                </tr>
-                <tr>
-                  <td>TypeScript</td>
-                  <td>半年程度</td>
-                  <td><span class="rating rate3"></span></td>
-                </tr>
-                <tr>
-                  <td>jQuery</td>
-                  <td>1年半</td>
-                  <td><span class="rating rate3"></span></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <div class="contents-box">
-          <div class="contents-inner-area">
-            <h3>バックエンド</h3>
-            <p>フロント・バックエンドが分かれていない案件で経験しました。</p>
-            <table class="table">
-              <thead>
-                <tr>
-                  <th scope="col">技術</th>
-                  <th scope="col">経験</th>
-                  <th scope="col">スキル</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>PHP</td>
-                  <td>1年程</td>
-                  <td><span class="rating rate3"></span></td>
-                </tr>
-                <tr>
-                  <td>SQL</td>
-                  <td>2年程</td>
-                  <td><span class="rating rate4"></span></td>
-                </tr>
-                <tr>
-                  <td>Laravel</td>
-                  <td>1ヵ月</td>
-                  <td><span class="rating rate3"></span></td>
-                </tr>
-                <tr>
-                  <td>CakePHP</td>
-                  <td>10か月</td>
-                  <td><span class="rating rate3"></span></td>
-                </tr>
-                <tr>
-                  <td>node.js</td>
-                  <td>10ヵ月</td>
-                  <td><span class="rating rate3"></span></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <div class="contents-box">
-          <div class="contents-inner-area">
-            <h3>デザイン・コーディング</h3>
-            <p>
-              Bootstrapを使った実装もゴリゴリ手描き実装もできます。<br />基本的にレスポンシブレイアウトで作成しています。
-            </p>
-            <table class="table">
-              <thead>
-                <tr>
-                  <th scope="col">技術</th>
-                  <th scope="col">経験</th>
-                  <th scope="col">スキル</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>HTML・CSS</td>
-                  <td>4年程</td>
-                  <td><span class="rating rate5"></span></td>
-                </tr>
-                <tr>
-                  <td>Bootstrap</td>
-                  <td>2年程</td>
-                  <td><span class="rating rate5"></span></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <div class="contents-box">
-          <div class="contents-inner-area">
-            <h3>その他</h3>
-            <table class="table">
-              <thead>
-                <tr>
-                  <th scope="col">技術</th>
-                  <th scope="col">経験</th>
-                  <th scope="col">スキル</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>docker・vagrant</td>
-                  <td>9ヵ月</td>
-                  <td><span class="rating rate3"></span></td>
-                </tr>
-                <tr>
-                  <td>ServiceNow<br /><small>※SaaS/PaaS</small></td>
-                  <td>8ヵ月</td>
-                  <td><span class="rating rate3"></span></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-      <!-- SKILLS -->
-      <!-- profile -->
+      <!-- PROFILE -->
       <div id="profile" class="section">
-        <h2><i class="fas fa-address-card"></i>PROFILE</h2>
+        <h2><i class="fas fa-address-card"></i>ABOUT</h2>
         <!-- Slider -->
         <div class="slider">
           <div class="slideNavi">
@@ -242,8 +70,39 @@
           </div>
         </div>
       </div>
-      <!-- profile -->
+      <!-- PROFILE -->
+      <!-- works -->
+      <div id="works" class="section">
+        <h2><i class="far fa-file-code"></i>WORKS</h2>
+        <!-- contents-box -->
+        <div class="contents-box">
+          <div class="contents-inner-area">
+            <div class="bg-work-img" id="img_portfolio"></div>
+            <figure></figure>
+            <h3>ポートフォリオ</h3>
+            <a href="https://github.com/ashinon/portfolio">GitHub</a>
+            <p>今開いているページです。TypeScriptでフルスクラッチで作成しました。<br></p>
+          </div>
+        </div>
+        <div class="contents-box">
+          <div class="contents-inner-area">
+            <figure>
+              <div class="bg-work-img" id="img_slideshow"></div>
+            </figure>
+            <h3>スライダー</h3>
+            <a href="https://github.com/ashinon/slide-show">GitHub</a>
+            <p>依存ライブラリはなしで単一モジュールで動くように作りました。<br>JavaScriptで出来ています。</p>
+          </div>
+        </div>
+      </div>
+      <!-- SKILLS -->
+      <div id="skills" class="section">
+        <h2><i class="fas fa-tasks"></i>SKILLS</h2>
+      </div>
+      <!-- SKILLS -->
+      <a id="goTopButton"><img src="src/img/IMG_4402.png"></a>
       <footer>© 2022 Ashino Nanase</footer>
     </div>
+    <script src="dist/js/index.js"></script>
   </body>
-</html>
+  </html>

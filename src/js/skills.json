@@ -1,0 +1,39 @@
+[
+  {
+    "h3": "フロントエンド",
+    "p": "フレームワークはAngularが一番理解度が高いですが、今後Reactも使って両方理解したいと考えています。",
+    "thContets": ["技術", "レベル", ""],
+    "tdContets": [
+      ["JavaScript", "得意", "<span class=\"rating rate5\"></span>"],
+      ["TypeScript", "開発が出来る", "<span class=\"rating rate4\"></span>"],
+      ["Angular", "構築～開発が出来る", "<span class=\"rating rate3\"></span>"]
+    ]
+  },
+  {
+    "h3": "バックエンド",
+    "thContets": ["技術", "レベル", ""],
+    "tdContets": [
+      ["SQL", "多少複雑なクエリも読み解ける", "<span class=\"rating rate4\"></span>"],
+      ["PHP", "開発が出来る", "<span class=\"rating rate3\"></span>"],
+      ["Laravel", "構築～開発が出来る", "<span class=\"rating rate3\"></span>"]
+    ]
+  },
+  {
+    "h3": "デザイン・コーディング",
+    "p": "アトミックデザインを意識し、再利用性を考慮したデザイン・コーディングをするようにしております。",
+    "thContets": ["技術", "レベル", ""],
+    "tdContets": [
+      ["SCSS/Pug", "得意", "<span class=\"rating rate5\"></span>"],
+      ["Photoshop", "基本操作が出来る", "<span class=\"rating rate3\"></span>"],
+      ["XD", "基本操作が出来る", "<span class=\"rating rate3\"></span>"]
+    ]
+  },
+  {
+    "h3": "その他",
+    "thContets": ["技術", "レベル", ""],
+    "tdContets": [
+      ["docker・vagrant", "基本操作が出来る", "<span class=\"rating rate3\"></span>"],
+      ["Webpack・Galp", "導入・操作が出来る", "<span class=\"rating rate4\"></span>"]
+    ]
+  }
+]
