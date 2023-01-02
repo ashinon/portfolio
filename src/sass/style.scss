@@ -619,6 +619,7 @@ _:-ms-lang(x),
     text-align: left;
     border: none;
     overflow-x: auto;
+    table-layout:fixed;
     thead,
     tbody,
     tr,
@@ -644,6 +645,10 @@ _:-ms-lang(x),
     &:before {
       color: #ddd;
     }
+  }
+  .rate2::after {
+    content: '★★';
+    color: #333;
   }
   .rate3::after {
     content: '★★★';

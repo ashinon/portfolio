@@ -33,7 +33,7 @@
     "thContets": ["技術", "レベル", ""],
     "tdContets": [
       ["docker・vagrant", "基本操作が出来る", "<span class=\"rating rate3\"></span>"],
-      ["Webpack・Galp", "導入・操作が出来る", "<span class=\"rating rate4\"></span>"]
+      ["Webpack・Gulp", "導入・操作が出来る", "<span class=\"rating rate4\"></span>"]
     ]
   }
 ]
