@@ -932,3 +932,57 @@ _:-ms-lang(x),
   min-width: calc(50% - 2.5em);
 }
 
+// スライド個別コンテンツ
+#slideContents_4, 
+#slideContents_3, 
+#slideContents_2, 
+#slideContents_1, 
+#slideContents_0 {
+  .slide-contents {
+    flex-wrap: wrap;
+    flex-direction:row;
+  }
+}
+
+#slideContents_4,
+#slideContents_3,
+#slideContents_2,
+#slideContents_1,
+#slideContents_0 {
+  .slide-contents {
+    .has-bg-img {
+      background-size: contain;
+      background-position: center right;
+      opacity: 0.9;
+      margin: 0;
+    }
+  }
+}
+
+#slideContents_1,
+#slideContents_0 {
+  .slide-contents {
+    .has-bg-img {
+      min-height: 200px;
+    }
+  }
+}
+
+#slideContents_3 {
+  .slide-contents {
+    .has-bg-img {
+      min-height: 150px;
+    }
+  }
+}
+
+#slideContents_4,
+#slideContents_3,
+#slideContents_2,
+#slideContents_1,
+#slideContents_0 {
+  .img-container {
+    width: auto;
+    margin : 0;
+  }
+}
