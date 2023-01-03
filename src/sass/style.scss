@@ -1,3 +1,5 @@
+// @use './slide-drag.scss'; 
+
 @font-face {
   font-family: 'Open Sans';
   font-style: normal;
@@ -920,6 +922,15 @@ _:-ms-lang(x),
 
 .slide-contents dl {
   width: auto;
+  dt, dd {
+    text-align: left;
+  }
+  dt {
+    width: 6em;
+  }
+  dd {
+    width: calc(100% - 6em);    
+  }
 }
 
 .slide-contents ul,
@@ -930,6 +941,14 @@ _:-ms-lang(x),
 /* リストタグ */
 .slide-contents li {
   min-width: calc(50% - 2.5em);
+}
+
+#goTopButton {
+  z-index: 999;
+  position: fixed;
+  bottom: 0;
+  left: calc(90% - 81px);
+  display: none;
 }
 
 // スライド個別コンテンツ
@@ -959,7 +978,8 @@ _:-ms-lang(x),
   }
 }
 
-#slideContents_1,
+// プロフィールとエンジニアになるまでの経緯
+#slideContents_3,
 #slideContents_0 {
   .slide-contents {
     .has-bg-img {
@@ -968,7 +988,8 @@ _:-ms-lang(x),
   }
 }
 
-#slideContents_3 {
+// 直近の活動
+#slideContents_1 {
   .slide-contents {
     .has-bg-img {
       min-height: 150px;
